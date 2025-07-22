@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Neuronal Biológica Digital</title>
+    <title></title>
     <style>
         * {
             margin: 0;
@@ -94,13 +94,7 @@
 <body>
     <canvas id="neuralCanvas"></canvas>
     
-    <div class="hero-content">
-        <div class="hero-text">
-            <h1>Red Neuronal Digital</h1>
-            <p>Experimenta la convergencia entre biología y tecnología. Una interfaz que simula las conexiones sinápticas del cerebro humano con la elegancia del diseño digital moderno.</p>
-            <button class="cta-button">Explorar Tecnología</button>
-        </div>
-    </div>
+    
 
     <script>
         class NeuralNetwork {
@@ -232,11 +226,105 @@
                             connectionCount++;
                         }
                     }
+                    // Asegurar que cada neurona tenga al menos una conexión saliente
+                    if (connectionCount === 0 && nearbyNeurons.length > 0) {
+                        const closestNeuron = nearbyNeurons[0]; // La neurona más cercana ya está al principio
+                        this.connections.push({
+                            from: i,
+                            to: closestNeuron.index,
+                            strength: Math.random() * 0.4 + 0.6,
+                            signal: 0,
+                            signalSpeed: 0.015 + Math.random() * 0.025,
+                            active: false,
+                            lastActivation: 0
+                        });
+                        connectionCount++;
+                    }
                 });
+                this.connectComponents(); // Asegurar que todas las neuronas estén conectadas
             }
 
             distance(a, b) {
                 return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+            }
+
+            findConnectedComponents() {
+                const visited = new Array(this.neurons.length).fill(false);
+                const components = [];
+
+                for (let i = 0; i < this.neurons.length; i++) {
+                    if (!visited[i]) {
+                        const component = [];
+                        const queue = [i];
+                        visited[i] = true;
+
+                        while (queue.length > 0) {
+                            const current = queue.shift();
+                            component.push(current);
+
+                            // Buscar conexiones salientes
+                            this.connections.forEach(conn => {
+                                if (conn.from === current && !visited[conn.to]) {
+                                    visited[conn.to] = true;
+                                    queue.push(conn.to);
+                                }
+                            });
+
+                            // Buscar conexiones entrantes (para grafos no dirigidos o bidireccionales)
+                            this.connections.forEach(conn => {
+                                if (conn.to === current && !visited[conn.from]) {
+                                    visited[conn.from] = true;
+                                    queue.push(conn.from);
+                                }
+                            });
+                        }
+                        components.push(component);
+                    }
+                }
+                return components;
+            }
+
+            connectComponents() {
+                let components = this.findConnectedComponents();
+                while (components.length > 1) {
+                    const comp1 = components[0];
+                    const comp2 = components[1];
+
+                    // Encontrar la neurona más cercana entre los dos componentes
+                    let closestNeuron1 = -1;
+                    let closestNeuron2 = -1;
+                    let minDistance = Infinity;
+
+                    for (const n1Index of comp1) {
+                        for (const n2Index of comp2) {
+                            const dist = this.distance(this.neurons[n1Index], this.neurons[n2Index]);
+                            if (dist < minDistance) {
+                                minDistance = dist;
+                                closestNeuron1 = n1Index;
+                                closestNeuron2 = n2Index;
+                            }
+                        }
+                    }
+
+                    if (closestNeuron1 !== -1 && closestNeuron2 !== -1) {
+                        // Añadir una conexión entre los dos componentes
+                        this.connections.push({
+                            from: closestNeuron1,
+                            to: closestNeuron2,
+                            strength: 0.8, // Conexión fuerte para asegurar la conectividad
+                            signal: 0,
+                            signalSpeed: 0.03,
+                            active: false,
+                            lastActivation: 0
+                        });
+                        // Re-evaluar los componentes conectados
+                        components = this.findConnectedComponents();
+                    } else {
+                        // Esto no debería pasar si hay neuronas en los componentes
+                        console.warn("No se pudieron encontrar neuronas para conectar entre componentes.");
+                        break;
+                    }
+                }
             }
 
             bindEvents() {
