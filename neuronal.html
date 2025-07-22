@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Neuronal Biológica Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-text {
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #9333ea, #3b82f6, #ffffff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: #b3b3b3;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #9333ea, #3b82f6);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(147, 51, 234, 0.4);
+        }
+
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.7)); }
+            100% { filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.7)); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            .hero-text p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Red Neuronal Digital</h1>
+            <p>Experimenta la convergencia entre biología y tecnología. Una interfaz que simula las conexiones sinápticas del cerebro humano con la elegancia del diseño digital moderno.</p>
+            <button class="cta-button">Explorar Tecnología</button>
+        </div>
+    </div>
+
+    <script>
+        class NeuralNetwork {
+            constructor() {
+                this.canvas = document.getElementById('neuralCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.neurons = [];
+                this.connections = [];
+                this.mousePos = { x: 0, y: 0 };
+                this.time = 0;
+                
+                this.resize();
+                this.init();
+                this.bindEvents();
+                this.animate();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+            }
+
+            init() {
+                this.neurons = [];
+                this.connections = [];
+                
+                // Crear estructura tipo árbol desde el centro
+                const centerX = this.width / 2;
+                const centerY = this.height / 2;
+                const maxRadius = Math.min(this.width, this.height) * 0.45;
+                const neuronCount = Math.floor((this.width * this.height) / 8000);
+                
+                // Crear marcapasos en el centro
+                const pacemakerCount = 3 + Math.floor(Math.random() * 4);
+                for (let i = 0; i < pacemakerCount; i++) {
+                    const angle = (i / pacemakerCount) * Math.PI * 2;
+                    const radius = 20 + Math.random() * 40;
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    this.neurons.push({
+                        x: x,
+                        y: y,
+                        size: 3 + Math.random() * 2,
+                        activity: 0,
+                        lastImpulse: 0,
+                        impulseDecay: 0.93,
+                        baseActivity: Math.random() * 0.1,
+                        brightness: 0.6 + Math.random() * 0.4,
+                        type: 'excitatory',
+                        receivedImpulse: false,
+                        isPacemaker: true,
+                        nextSpontaneousImpulse: Math.random() * 1000,
+                        layer: 0,
+                        branchAngle: angle
+                    });
+                }
+
+                // Crear capas de neuronas en estructura de árbol
+                const layers = 8;
+                const neuronsPerLayer = Math.floor((neuronCount - pacemakerCount) / layers);
+                
+                for (let layer = 1; layer <= layers; layer++) {
+                    const layerRadius = (layer / layers) * maxRadius;
+                    const neuronsInThisLayer = Math.floor(neuronsPerLayer * (1 + layer * 0.3)); // Más neuronas en capas externas
+                    
+                    for (let n = 0; n < neuronsInThisLayer; n++) {
+                        // Crear ramas principales
+                        const branchCount = 6 + layer * 2; // Más ramas en capas externas
+                        const branchIndex = Math.floor(Math.random() * branchCount);
+                        const branchAngle = (branchIndex / branchCount) * Math.PI * 2;
+                        
+                        // Agregar variación orgánica
+                        const angleVariation = (Math.random() - 0.5) * (Math.PI / 4); // ±45 grados
+                        const radiusVariation = (Math.random() - 0.5) * layerRadius * 0.3;
+                        const finalAngle = branchAngle + angleVariation;
+                        const finalRadius = layerRadius + radiusVariation;
+                        
+                        // Crear sub-ramas para estructura más orgánica
+                        const subBranchOffset = (Math.random() - 0.5) * 60;
+                        
+                        const x = centerX + Math.cos(finalAngle) * finalRadius + subBranchOffset;
+                        const y = centerY + Math.sin(finalAngle) * finalRadius + subBranchOffset;
+                        
+                        // Verificar que esté dentro de los límites
+                        if (x > 50 && x < this.width - 50 && y > 50 && y < this.height - 50) {
+                            this.neurons.push({
+                                x: x,
+                                y: y,
+                                size: Math.max(1, 2.5 - layer * 0.2) + Math.random() * 1,
+                                activity: 0,
+                                lastImpulse: 0,
+                                impulseDecay: 0.94 + Math.random() * 0.03,
+                                baseActivity: Math.random() * 0.05,
+                                brightness: Math.max(0.2, 0.5 - layer * 0.04) + Math.random() * 0.3,
+                                type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
+                                receivedImpulse: false,
+                                isPacemaker: false,
+                                layer: layer,
+                                branchAngle: branchAngle
+                            });
+                        }
+                    }
+                }
+
+                // Crear conexiones privilegiando conexiones hacia capas externas (tipo árbol)
+                this.neurons.forEach((neuron, i) => {
+                    const maxConnections = neuron.isPacemaker ? 5 : (3 - Math.floor(neuron.layer / 3));
+                    let connectionCount = 0;
+
+                    // Ordenar neuronas por distancia
+                    const nearbyNeurons = this.neurons
+                        .map((n, idx) => ({ neuron: n, index: idx, distance: this.distance(neuron, n) }))
+                        .filter(n => n.index !== i)
+                        .sort((a, b) => a.distance - b.distance);
+
+                    for (let nearby of nearbyNeurons) {
+                        if (connectionCount >= maxConnections) break;
+                        
+                        const otherNeuron = nearby.neuron;
+                        const distance = nearby.distance;
+                        
+                        // Preferir conexiones hacia capas externas (propagación centrífuga)
+                        const layerDiff = otherNeuron.layer - neuron.layer;
+                        const sameLayer = Math.abs(layerDiff) <= 1;
+                        const towardsBranches = layerDiff >= 0;
+                        
+                        // Calcular similitud de rama para conexiones más orgánicas
+                        const angleDiff = Math.abs(neuron.branchAngle - otherNeuron.branchAngle);
+                        const sameBranch = angleDiff < Math.PI / 3 || angleDiff > Math.PI * 5/3;
+                        
+                        let connectionProbability = 0.3;
+                        
+                        if (neuron.isPacemaker) connectionProbability = 0.8;
+                        else if (layerDiff === 1 && sameBranch) connectionProbability = 0.7; // Misma rama, capa siguiente
+                        else if (layerDiff === 1) connectionProbability = 0.5; // Diferente rama, capa siguiente  
+                        else if (sameLayer && sameBranch) connectionProbability = 0.4; // Misma capa y rama
+                        else if (layerDiff < 0) connectionProbability = 0.1; // Conexiones hacia el centro (raras)
+                        
+                        const maxDistance = neuron.isPacemaker ? 200 : (120 - neuron.layer * 10);
+                        
+                        if (distance < maxDistance && Math.random() < connectionProbability) {
+                            this.connections.push({
+                                from: i,
+                                to: nearby.index,
+                                strength: Math.random() * 0.4 + 0.6,
+                                signal: 0,
+                                signalSpeed: 0.015 + Math.random() * 0.025,
+                                active: false,
+                                lastActivation: 0
+                            });
+                            connectionCount++;
+                        }
+                    }
+                });
+            }
+
+            distance(a, b) {
+                return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+            }
+
+            bindEvents() {
+                window.addEventListener('resize', () => {
+                    this.resize();
+                    this.init();
+                });
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    this.mousePos.x = e.clientX;
+                    this.mousePos.y = e.clientY;
+                });
+            }
+
+            drawNeuron(neuron, index) {
+                const mouseDistance = this.distance(neuron, this.mousePos);
+                const mouseInfluence = Math.max(0, 1 - mouseDistance / 150);
+                
+                // Manejar impulsos espontáneos para marcapasos
+                if (neuron.isPacemaker && this.time >= neuron.nextSpontaneousImpulse) {
+                    neuron.activity = 1.0;
+                    neuron.lastImpulse = this.time;
+                    neuron.receivedImpulse = true;
+                    neuron.nextSpontaneousImpulse = this.time + 1000 + Math.random() * 3000;
+                }
+
+                // Decaimiento de la actividad después de recibir impulso
+                if (neuron.receivedImpulse) {
+                    neuron.activity *= neuron.impulseDecay;
+                    if (neuron.activity < 0.05) {
+                        neuron.receivedImpulse = false;
+                        neuron.activity = neuron.baseActivity;
+                    }
+                } else {
+                    neuron.activity = neuron.baseActivity + mouseInfluence * 0.2;
+                }
+                
+                const activity = Math.min(1, neuron.activity + mouseInfluence * 0.3);
+                
+                // Colores según el tipo de neurona con mayor brillo cuando están activas
+                let baseColor;
+                let glowIntensity = activity;
+                
+                if (neuron.receivedImpulse) {
+                    glowIntensity = Math.min(1, activity * 3); // Brillo mucho mayor cuando reciben impulso
+                }
+                
+                if (neuron.type === 'inhibitory') {
+                    baseColor = `rgba(147, 51, 234, ${glowIntensity * (neuron.brightness + 0.5)})`;
+                } else {
+                    baseColor = `rgba(59, 130, 246, ${glowIntensity * (neuron.brightness + 0.5)})`;
+                }
+
+                // Glow effect más dramático para impulsos
+                const glowRadius = neuron.size + (neuron.receivedImpulse ? activity * 20 : activity * 8);
+                const gradient = this.ctx.createRadialGradient(
+                    neuron.x, neuron.y, 0,
+                    neuron.x, neuron.y, glowRadius
+                );
+                
+                gradient.addColorStop(0, baseColor);
+                gradient.addColorStop(0.4, neuron.receivedImpulse ? 
+                    `rgba(255, 255, 255, ${activity * 0.8})` : 
+                    `rgba(255, 255, 255, ${activity * 0.3})`
+                );
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                this.ctx.beginPath();
+                this.ctx.arc(neuron.x, neuron.y, glowRadius, 0, Math.PI * 2);
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+
+                // Núcleo de la neurona más brillante cuando recibe impulso
+                this.ctx.beginPath();
+                this.ctx.arc(neuron.x, neuron.y, neuron.size, 0, Math.PI * 2);
+                const coreOpacity = neuron.receivedImpulse ? 
+                    0.9 + activity * 0.1 : 
+                    0.4 + activity * 0.3;
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${coreOpacity})`;
+                this.ctx.fill();
+
+                // Efecto de "chispa" para marcapasos más prominente
+                if (neuron.isPacemaker && neuron.receivedImpulse && activity > 0.6) {
+                    for (let i = 0; i < 6; i++) {
+                        const sparkAngle = (i / 6) * Math.PI * 2;
+                        const sparkDistance = 10 + Math.random() * 15;
+                        const sparkX = neuron.x + Math.cos(sparkAngle) * sparkDistance;
+                        const sparkY = neuron.y + Math.sin(sparkAngle) * sparkDistance;
+                        this.ctx.beginPath();
+                        this.ctx.arc(sparkX, sparkY, 1.5, 0, Math.PI * 2);
+                        this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.9 + 0.1})`;
+                        this.ctx.fill();
+                    }
+
+                    // Anillo de expansión para marcapasos
+                    const ringRadius = activity * 25;
+                    this.ctx.beginPath();
+                    this.ctx.arc(neuron.x, neuron.y, ringRadius, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - activity) * 0.3})`;
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
+                }
+            }
+
+            drawConnection(connection) {
+                const fromNeuron = this.neurons[connection.from];
+                const toNeuron = this.neurons[connection.to];
+                
+                if (!fromNeuron || !toNeuron) return;
+
+                // Activación de sinapsis basada en actividad neuronal alta
+                const fromActivity = fromNeuron.activity;
+                const shouldActivate = fromNeuron.receivedImpulse && fromActivity > 0.6 && Math.random() > 0.8;
+                
+                if (shouldActivate && !connection.active) {
+                    connection.active = true;
+                    connection.signal = 0;
+                    connection.lastActivation = this.time;
+                }
+
+                // Propagación de señal
+                if (connection.active) {
+                    connection.signal += connection.signalSpeed;
+                    if (connection.signal >= 1) {
+                        connection.active = false;
+                        connection.signal = 0;
+                        // Activar neurona objetivo con impulso rápido
+                        toNeuron.activity = 1.0;
+                        toNeuron.lastImpulse = this.time;
+                        toNeuron.receivedImpulse = true;
+                    }
+                }
+
+                // Dibujar axón con curva orgánica
+                const controlX1 = fromNeuron.x + (toNeuron.x - fromNeuron.x) * 0.3 + Math.sin(this.time * 0.01) * 15;
+                const controlY1 = fromNeuron.y + (toNeuron.y - fromNeuron.y) * 0.3 + Math.cos(this.time * 0.01) * 15;
+                const controlX2 = fromNeuron.x + (toNeuron.x - fromNeuron.x) * 0.7 + Math.cos(this.time * 0.015) * 10;
+                const controlY2 = fromNeuron.y + (toNeuron.y - fromNeuron.y) * 0.7 + Math.sin(this.time * 0.015) * 10;
+
+                // Opacidad basada en fuerza de conexión y actividad
+                const baseOpacity = connection.strength * 0.15;
+                const activityBoost = (fromNeuron.receivedImpulse ? fromNeuron.activity * 0.3 : 0) + 
+                                   (toNeuron.receivedImpulse ? toNeuron.activity * 0.3 : 0);
+                const opacity = Math.min(0.6, baseOpacity + activityBoost);
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(fromNeuron.x, fromNeuron.y);
+                this.ctx.bezierCurveTo(controlX1, controlY1, controlX2, controlY2, toNeuron.x, toNeuron.y);
+                this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                this.ctx.lineWidth = 0.8;
+                this.ctx.stroke();
+
+                // Dibujar señal en movimiento más brillante
+                if (connection.active && connection.signal > 0 && connection.signal < 1) {
+                    const t = connection.signal;
+                    const signalX = this.bezierPoint(fromNeuron.x, controlX1, controlX2, toNeuron.x, t);
+                    const signalY = this.bezierPoint(fromNeuron.y, controlY1, controlY2, toNeuron.y, t);
+
+                    const gradient = this.ctx.createRadialGradient(signalX, signalY, 0, signalX, signalY, 12);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                    gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.9)');
+                    gradient.addColorStop(0.7, 'rgba(147, 51, 234, 0.6)');
+                    gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(signalX, signalY, 12, 0, Math.PI * 2);
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.fill();
+
+                    // Estela de la señal
+                    for (let i = 1; i <= 3; i++) {
+                        const trailT = Math.max(0, t - i * 0.02);
+                        if (trailT > 0) {
+                            const trailX = this.bezierPoint(fromNeuron.x, controlX1, controlX2, toNeuron.x, trailT);
+                            const trailY = this.bezierPoint(fromNeuron.y, controlY1, controlY2, toNeuron.y, trailT);
+                            
+                            this.ctx.beginPath();
+                            this.ctx.arc(trailX, trailY, 8 - i * 2, 0, Math.PI * 2);
+                            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.3 / i})`;
+                            this.ctx.fill();
+                        }
+                    }
+                }
+            }
+
+            bezierPoint(p0, p1, p2, p3, t) {
+                const u = 1 - t;
+                return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
+            }
+
+            render() {
+                // Fondo con gradiente sutil
+                const gradient = this.ctx.createRadialGradient(
+                    this.width / 2, this.height / 2, 0,
+                    this.width / 2, this.height / 2, Math.max(this.width, this.height) / 2
+                );
+                gradient.addColorStop(0, 'rgba(15, 15, 25, 1)');
+                gradient.addColorStop(1, 'rgba(5, 5, 10, 1)');
+                
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.width, this.height);
+
+                // Dibujar conexiones primero
+                this.connections.forEach(connection => this.drawConnection(connection));
+                
+                // Dibujar neuronas encima
+                this.neurons.forEach((neuron, index) => this.drawNeuron(neuron, index));
+            }
+
+            animate() {
+                this.time++;
+                this.render();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Inicializar cuando la página cargue
+        window.addEventListener('load', () => {
+            new NeuralNetwork();
+        });
+    </script>
+</body>
+</html>
