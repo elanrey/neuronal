@@ -135,35 +135,9 @@
                 const maxRadius = Math.min(this.width, this.height) * 0.45;
                 const neuronCount = Math.floor((this.width * this.height) / 8000);
                 
-                // Crear marcapasos en el centro
-                const pacemakerCount = 3 + Math.floor(Math.random() * 4);
-                for (let i = 0; i < pacemakerCount; i++) {
-                    const angle = (i / pacemakerCount) * Math.PI * 2;
-                    const radius = 20 + Math.random() * 40;
-                    const x = centerX + Math.cos(angle) * radius;
-                    const y = centerY + Math.sin(angle) * radius;
-                    
-                    this.neurons.push({
-                        x: x,
-                        y: y,
-                        size: 3 + Math.random() * 2,
-                        activity: 0,
-                        lastImpulse: 0,
-                        impulseDecay: 0.93,
-                        baseActivity: Math.random() * 0.1,
-                        brightness: 0.6 + Math.random() * 0.4,
-                        type: 'excitatory',
-                        receivedImpulse: false,
-                        isPacemaker: true,
-                        nextSpontaneousImpulse: Math.random() * 1000,
-                        layer: 0,
-                        branchAngle: angle
-                    });
-                }
-
                 // Crear capas de neuronas en estructura de árbol
                 const layers = 8;
-                const neuronsPerLayer = Math.floor((neuronCount - pacemakerCount) / layers);
+                const neuronsPerLayer = Math.floor(neuronCount / layers);
                 
                 for (let layer = 1; layer <= layers; layer++) {
                     const layerRadius = (layer / layers) * maxRadius;
@@ -201,6 +175,7 @@
                                 type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
                                 receivedImpulse: false,
                                 isPacemaker: false,
+                                nextSpontaneousImpulse: this.time + Math.random() * 5000, // Inicializar impulso espontáneo
                                 layer: layer,
                                 branchAngle: branchAngle
                             });
@@ -210,7 +185,7 @@
 
                 // Crear conexiones privilegiando conexiones hacia capas externas (tipo árbol)
                 this.neurons.forEach((neuron, i) => {
-                    const maxConnections = neuron.isPacemaker ? 5 : (3 - Math.floor(neuron.layer / 3));
+                    const maxConnections = (3 - Math.floor(neuron.layer / 3));
                     let connectionCount = 0;
 
                     // Ordenar neuronas por distancia
@@ -242,7 +217,7 @@
                         else if (sameLayer && sameBranch) connectionProbability = 0.4; // Misma capa y rama
                         else if (layerDiff < 0) connectionProbability = 0.1; // Conexiones hacia el centro (raras)
                         
-                        const maxDistance = neuron.isPacemaker ? 200 : (120 - neuron.layer * 10);
+                        const maxDistance = (120 - neuron.layer * 10);
                         
                         if (distance < maxDistance && Math.random() < connectionProbability) {
                             this.connections.push({
@@ -280,12 +255,12 @@
                 const mouseDistance = this.distance(neuron, this.mousePos);
                 const mouseInfluence = Math.max(0, 1 - mouseDistance / 150);
                 
-                // Manejar impulsos espontáneos para marcapasos
-                if (neuron.isPacemaker && this.time >= neuron.nextSpontaneousImpulse) {
+                // Manejar impulsos espontáneos para cualquier neurona
+                if (this.time >= neuron.nextSpontaneousImpulse) {
                     neuron.activity = 1.0;
                     neuron.lastImpulse = this.time;
                     neuron.receivedImpulse = true;
-                    neuron.nextSpontaneousImpulse = this.time + 1000 + Math.random() * 3000;
+                    neuron.nextSpontaneousImpulse = this.time + 2000 + Math.random() * 5000; // Impulso cada 2-7 segundos
                 }
 
                 // Decaimiento de la actividad después de recibir impulso
@@ -343,8 +318,8 @@
                 this.ctx.fillStyle = `rgba(255, 255, 255, ${coreOpacity})`;
                 this.ctx.fill();
 
-                // Efecto de "chispa" para marcapasos más prominente
-                if (neuron.isPacemaker && neuron.receivedImpulse && activity > 0.6) {
+                // Efecto de "chispa" para neuronas activas
+                if (neuron.receivedImpulse && activity > 0.6) {
                     for (let i = 0; i < 6; i++) {
                         const sparkAngle = (i / 6) * Math.PI * 2;
                         const sparkDistance = 10 + Math.random() * 15;
@@ -356,7 +331,7 @@
                         this.ctx.fill();
                     }
 
-                    // Anillo de expansión para marcapasos
+                    // Anillo de expansión
                     const ringRadius = activity * 25;
                     this.ctx.beginPath();
                     this.ctx.arc(neuron.x, neuron.y, ringRadius, 0, Math.PI * 2);
