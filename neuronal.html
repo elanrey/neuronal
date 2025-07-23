@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Transforma tu negocio con Inteligencia Artificial y Automatizacion</title>
     <style>
         * {
             margin: 0;
@@ -94,6 +94,14 @@
 <body>
     <canvas id="neuralCanvas"></canvas>
     
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Transforma tu negocio con Inteligencia Artificial y Automatizacion</h1>
+            <p>Impulsa la eficiencia y el crecimiento de tu empresa con soluciones innovadoras de IA y automatización. Desde la optimización de procesos hasta la toma de decisiones estratégicas, te ayudamos a construir el futuro de tu negocio.</p>
+            <button class="cta-button">Descubre cómo</button>
+        </div>
+    </div>
+    
     
 
     <script>
@@ -149,13 +157,13 @@
                         const branchAngle = (branchIndex / branchCount) * Math.PI * 2;
                         
                         // Agregar variación orgánica
-                        const angleVariation = (Math.random() - 0.5) * (Math.PI / 8); // ±22.5 grados
-                        const radiusVariation = (Math.random() - 0.5) * layerRadius * 0.1; // Reducir variación de radio
+                        const angleVariation = (Math.random() - 0.5) * (Math.PI / 4); // ±45 grados
+                        const radiusVariation = (Math.random() - 0.5) * layerRadius * 0.3; // Aumentar la variación de radio
                         const finalAngle = branchAngle + angleVariation;
                         const finalRadius = layerRadius + radiusVariation;
                         
                         // Crear sub-ramas para estructura más orgánica
-                        const subBranchOffset = (Math.random() - 0.5) * 200; // Reducir offset de sub-rama
+                        const subBranchOffset = (Math.random() - 0.5) * 500; // Aumentar el offset de sub-rama
                         
                         let x = centerX + Math.cos(finalAngle) * finalRadius + subBranchOffset;
                         let y = centerY + Math.sin(finalAngle) * finalRadius + subBranchOffset;
@@ -163,12 +171,12 @@
                         this.neurons.push({
                                 x: x,
                                 y: y,
-                                size: Math.max(3, 4 - layer * 0.3) + Math.random() * 2,
+                                size: Math.max(1, 2 - layer * 0.2) + Math.random() * 1.5,
                                 activity: 0,
                                 lastImpulse: 0,
                                 impulseDecay: 0.94 + Math.random() * 0.03,
-                                baseActivity: Math.random() * 0.05,
-                                brightness: Math.max(0.01, 0.01 - layer * 0.01) + Math.random() * 0.01,
+                                baseActivity: Math.random() * 0.02,
+                                brightness: Math.max(0.005, 0.005 - layer * 0.005) + Math.random() * 0.005,
                                 type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
                                 receivedImpulse: false,
                                 isPacemaker: false,
@@ -426,7 +434,7 @@
                     neuron.activity = 1.0;
                     neuron.lastImpulse = this.time;
                     neuron.receivedImpulse = true;
-                    neuron.nextSpontaneousImpulse = this.time + 10000 + Math.random() * 20000; // Impulso cada 10-30 segundos
+                    neuron.nextSpontaneousImpulse = this.time + 20000 + Math.random() * 40000; // Impulso cada 20-60 segundos
                 }
 
                 // Decaimiento de la actividad después de recibir impulso
@@ -552,16 +560,16 @@
                 }
 
                 // Opacidad basada en fuerza de conexión y actividad
-                const baseOpacity = connection.strength * 0.15;
-                const activityBoost = (fromNeuron.receivedImpulse ? fromNeuron.activity * 0.1 : 0) + 
-                                   (toNeuron.receivedImpulse ? toNeuron.activity * 0.1 : 0);
-                const opacity = Math.min(0.1, baseOpacity + activityBoost);
+                const baseOpacity = connection.strength * 0.05; // Reducir opacidad base
+                const activityBoost = (fromNeuron.receivedImpulse ? fromNeuron.activity * 0.05 : 0) + 
+                                   (toNeuron.receivedImpulse ? toNeuron.activity * 0.05 : 0);
+                const opacity = Math.min(0.05, baseOpacity + activityBoost); // Limitar opacidad máxima
 
                 this.ctx.beginPath();
                 this.ctx.moveTo(fromNeuron.x, fromNeuron.y);
                 this.ctx.lineTo(toNeuron.x, toNeuron.y);
                 this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-                this.ctx.lineWidth = 1.5;
+                this.ctx.lineWidth = 1; // Reducir ancho de línea
                 this.ctx.stroke();
 
                 // Dibujar señal en movimiento más brillante
@@ -570,27 +578,27 @@
                     const signalX = fromNeuron.x + (toNeuron.x - fromNeuron.x) * t;
                     const signalY = fromNeuron.y + (toNeuron.y - fromNeuron.y) * t;
 
-                    const gradient = this.ctx.createRadialGradient(signalX, signalY, 0, signalX, signalY, 8);
-                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
-                    gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.5)');
-                    gradient.addColorStop(0.7, 'rgba(147, 51, 234, 0.3)');
+                    const gradient = this.ctx.createRadialGradient(signalX, signalY, 0, signalX, signalY, 4);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+                    gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.3)');
+                    gradient.addColorStop(0.7, 'rgba(147, 51, 234, 0.2)');
                     gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
 
                     this.ctx.beginPath();
-                    this.ctx.arc(signalX, signalY, 12, 0, Math.PI * 2);
+                    this.ctx.arc(signalX, signalY, 6, 0, Math.PI * 2);
                     this.ctx.fillStyle = gradient;
                     this.ctx.fill();
 
                     // Estela de la señal
-                    for (let i = 1; i <= 3; i++) {
-                        const trailT = Math.max(0, t - i * 0.02);
+                    for (let i = 1; i <= 2; i++) {
+                        const trailT = Math.max(0, t - i * 0.03);
                         if (trailT > 0) {
                             const trailX = fromNeuron.x + (toNeuron.x - fromNeuron.x) * trailT;
                             const trailY = fromNeuron.y + (toNeuron.y - fromNeuron.y) * trailT;
                             
                             this.ctx.beginPath();
-                            this.ctx.arc(trailX, trailY, 8 - i * 2, 0, Math.PI * 2);
-                            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.3 / i})`;
+                            this.ctx.arc(trailX, trailY, 4 - i * 1, 0, Math.PI * 2);
+                            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.15 / i})`;
                             this.ctx.fill();
                         }
                     }
@@ -603,8 +611,8 @@
                     this.width / 2, this.height / 2, 0,
                     this.width / 2, this.height / 2, Math.max(this.width, this.height) / 2
                 );
-                gradient.addColorStop(0, 'rgba(50, 50, 70, 1)');
-                gradient.addColorStop(1, 'rgba(20, 20, 30, 1)');
+                gradient.addColorStop(0, 'rgba(10, 10, 15, 1)');
+                gradient.addColorStop(1, 'rgba(5, 5, 10, 1)');
                 
                 this.ctx.fillStyle = gradient;
                 this.ctx.fillRect(0, 0, this.width, this.height);
@@ -615,7 +623,7 @@
                 // Dibujar neuronas encima
                 this.neurons.forEach((neuron, index) => {
                     // Añadir un movimiento aleatorio
-                    const randomMovementScale = 1.0; // Ajusta este valor para más o menos movimiento
+                    const randomMovementScale = 0.5; // Ajusta este valor para más o menos movimiento
                     neuron.x += (Math.random() - 0.5) * randomMovementScale;
                     neuron.y += (Math.random() - 0.5) * randomMovementScale;
                     this.drawNeuron(neuron, index);
