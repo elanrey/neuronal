@@ -230,7 +230,7 @@
                                 to: nearby.index,
                                 strength: Math.random() * 0.4 + 0.6,
                                 signal: 0,
-                                signalSpeed: 0.01 + Math.random() * 0.01, // Rango ajustado para ser más rápido
+                                signalSpeed: 0.015, // Velocidad fija y más lenta
                                 active: false,
                                 lastActivation: 0
                             });
@@ -245,7 +245,7 @@
                             to: closestNeuron.index,
                             strength: Math.random() * 0.4 + 0.6,
                             signal: 0,
-                            signalSpeed: 0.005 + Math.random() * 0.015,
+                            signalSpeed: 0.015, // Velocidad fija y más lenta
                             active: false,
                             lastActivation: 0
                         });
@@ -284,7 +284,7 @@
                                 to: targetNeuron.index,
                                 strength: Math.random() * 0.4 + 0.6,
                                 signal: 0,
-                                signalSpeed: 0.01 + Math.random() * 0.01,
+                                signalSpeed: 0.015,
                                 active: false,
                                 lastActivation: 0
                             });
@@ -622,10 +622,19 @@
                 
                 // Dibujar neuronas encima
                 this.neurons.forEach((neuron, index) => {
-                    // Añadir un movimiento aleatorio
-                    const randomMovementScale = 0.5; // Ajusta este valor para más o menos movimiento
-                    neuron.x += (Math.random() - 0.5) * randomMovementScale;
-                    neuron.y += (Math.random() - 0.5) * randomMovementScale;
+                    // Añadir un movimiento predominantemente aleatorio con un toque de fluidez
+                    const fluidMovementAmplitude = 0.8; // Amplitud del movimiento fluido (aumentada)
+                    const randomJitterScale = 1.5; // Escala del movimiento aleatorio (reducida ligeramente)
+
+                    neuron.x += Math.sin(this.time * 0.02 + index) * fluidMovementAmplitude + (Math.random() - 0.5) * randomJitterScale;
+                    neuron.y += Math.cos(this.time * 0.02 + index) * fluidMovementAmplitude + (Math.random() - 0.5) * randomJitterScale;
+
+                    // Asegurar que las neuronas se queden dentro de la pantalla
+                    if (neuron.x < 0) neuron.x = 0;
+                    if (neuron.x > this.width) neuron.x = this.width;
+                    if (neuron.y < 0) neuron.y = 0;
+                    if (neuron.y > this.height) neuron.y = this.height;
+
                     this.drawNeuron(neuron, index);
                 });
             }
