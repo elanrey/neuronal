@@ -105,7 +105,12 @@
                 this.connections = [];
                 this.mousePos = { x: 0, y: 0 };
                 this.time = 0;
-                
+                this.minConnectionsPerNeuron = 2; // Mínimo de conexiones por neurona
+                this.maxConnectionDistance = 200; // Distancia máxima para una conexión
+                this.lastConnectionCheck = 0;
+                this.connectionCheckInterval = 500; // ms
+                this.inactivityActivationThreshold = 30000; // 30 segundos en milisegundos (aproximadamente, ya que 'time' es frames)
+
                 this.resize();
                 this.init();
                 this.bindEvents();
@@ -144,13 +149,13 @@
                         const branchAngle = (branchIndex / branchCount) * Math.PI * 2;
                         
                         // Agregar variación orgánica
-                        const angleVariation = (Math.random() - 0.5) * (Math.PI / 4); // ±45 grados
-                        const radiusVariation = (Math.random() - 0.5) * layerRadius * 0.3;
+                        const angleVariation = (Math.random() - 0.5) * (Math.PI / 8); // ±22.5 grados
+                        const radiusVariation = (Math.random() - 0.5) * layerRadius * 0.1; // Reducir variación de radio
                         const finalAngle = branchAngle + angleVariation;
                         const finalRadius = layerRadius + radiusVariation;
                         
                         // Crear sub-ramas para estructura más orgánica
-                        const subBranchOffset = (Math.random() - 0.5) * 1000;
+                        const subBranchOffset = (Math.random() - 0.5) * 200; // Reducir offset de sub-rama
                         
                         let x = centerX + Math.cos(finalAngle) * finalRadius + subBranchOffset;
                         let y = centerY + Math.sin(finalAngle) * finalRadius + subBranchOffset;
@@ -242,6 +247,44 @@
                 this.connectComponents(); // Asegurar que todas las neuronas estén conectadas
             }
 
+            maintainConnections() {
+                // Eliminar conexiones demasiado grandes
+                this.connections = this.connections.filter(conn => {
+                    const fromNeuron = this.neurons[conn.from];
+                    const toNeuron = this.neurons[conn.to];
+                    if (!fromNeuron || !toNeuron) return false; // Eliminar conexiones inválidas
+                    return this.distance(fromNeuron, toNeuron) <= this.maxConnectionDistance;
+                });
+
+                // Asegurar un mínimo de conexiones por neurona
+                this.neurons.forEach((neuron, i) => {
+                    const currentConnectionsCount = this.connections.filter(conn => conn.from === i || conn.to === i).length;
+
+                    if (currentConnectionsCount < this.minConnectionsPerNeuron) {
+                        // Encontrar neuronas cercanas no conectadas
+                        const potentialTargets = this.neurons
+                            .map((n, idx) => ({ neuron: n, index: idx, distance: this.distance(neuron, n) }))
+                            .filter(n => n.index !== i && !this.connections.some(conn => 
+                                (conn.from === i && conn.to === n.index) || (conn.from === n.index && conn.to === i)
+                            ))
+                            .sort((a, b) => a.distance - b.distance);
+
+                        if (potentialTargets.length > 0) {
+                            const targetNeuron = potentialTargets[0];
+                            this.connections.push({
+                                from: i,
+                                to: targetNeuron.index,
+                                strength: Math.random() * 0.4 + 0.6,
+                                signal: 0,
+                                signalSpeed: 0.01 + Math.random() * 0.01,
+                                active: false,
+                                lastActivation: 0
+                            });
+                        }
+                    }
+                });
+            }
+
             distance(a, b) {
                 return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
             }
@@ -325,6 +368,43 @@
                 }
             }
 
+            maintainConnections() {
+                this.neurons.forEach((neuron, i) => {
+                    // Count existing connections for this neuron (both from and to)
+                    const currentConnections = this.connections.filter(conn => conn.from === i || conn.to === i).length;
+
+                    if (currentConnections < this.minConnectionsPerNeuron) {
+                        // Find potential new connections
+                        const potentialTargets = this.neurons.filter((otherNeuron, j) => {
+                            if (i === j) return false; // Cannot connect to self
+                            // Check if already connected (either direction)
+                            const alreadyConnected = this.connections.some(conn =>
+                                (conn.from === i && conn.to === j) || (conn.from === j && conn.to === i)
+                            );
+                            return !alreadyConnected;
+                        });
+
+                        if (potentialTargets.length > 0) {
+                            // Sort by distance to find the closest unconnected neuron
+                            potentialTargets.sort((a, b) => this.distance(neuron, a) - this.distance(neuron, b));
+
+                            const targetNeuronIndex = this.neurons.indexOf(potentialTargets[0]); // Get index of the closest
+                            
+                            // Add a new connection
+                            this.connections.push({
+                                from: i,
+                                to: targetNeuronIndex,
+                                strength: Math.random() * 0.4 + 0.6,
+                                signal: 0,
+                                signalSpeed: 0.01 + Math.random() * 0.01,
+                                active: false,
+                                lastActivation: 0
+                            });
+                        }
+                    }
+                });
+            }
+
             bindEvents() {
                 window.addEventListener('resize', () => {
                     this.resize();
@@ -342,7 +422,7 @@
                 const mouseInfluence = Math.max(0, 1 - mouseDistance / 150);
                 
                 // Manejar impulsos espontáneos para cualquier neurona
-                if (this.time >= neuron.nextSpontaneousImpulse) {
+                if (this.time >= neuron.nextSpontaneousImpulse || (this.time - neuron.lastImpulse > this.inactivityActivationThreshold && !neuron.receivedImpulse)) {
                     neuron.activity = 1.0;
                     neuron.lastImpulse = this.time;
                     neuron.receivedImpulse = true;
@@ -534,9 +614,10 @@
                 
                 // Dibujar neuronas encima
                 this.neurons.forEach((neuron, index) => {
-                    // Añadir un pequeño movimiento oscilatorio
-                    neuron.x += Math.sin(this.time * 0.01 + index) * Math.random();
-                    neuron.y += Math.cos(this.time * 0.01 + index) * Math.random();
+                    // Añadir un movimiento aleatorio
+                    const randomMovementScale = 1.0; // Ajusta este valor para más o menos movimiento
+                    neuron.x += (Math.random() - 0.5) * randomMovementScale;
+                    neuron.y += (Math.random() - 0.5) * randomMovementScale;
                     this.drawNeuron(neuron, index);
                 });
             }
@@ -544,6 +625,12 @@
             animate() {
                 this.time++;
                 this.render();
+
+                if (this.time - this.lastConnectionCheck > this.connectionCheckInterval) {
+                    this.maintainConnections();
+                    this.lastConnectionCheck = this.time;
+                }
+
                 requestAnimationFrame(() => this.animate());
             }
         }
