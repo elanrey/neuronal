@@ -201,15 +201,15 @@
                         const angleDiff = Math.abs(neuron.branchAngle - otherNeuron.branchAngle);
                         const sameBranch = angleDiff < Math.PI / 3 || angleDiff > Math.PI * 5/3;
                         
-                        let connectionProbability = 0.3;
+                        let connectionProbability = 0.4;
                         
-                        if (neuron.isPacemaker) connectionProbability = 0.8;
-                        else if (layerDiff === 1 && sameBranch) connectionProbability = 0.7; // Misma rama, capa siguiente
-                        else if (layerDiff === 1) connectionProbability = 0.5; // Diferente rama, capa siguiente  
-                        else if (sameLayer && sameBranch) connectionProbability = 0.4; // Misma capa y rama
-                        else if (layerDiff < 0) connectionProbability = 0.1; // Conexiones hacia el centro (raras)
+                        if (neuron.isPacemaker) connectionProbability = 0.9;
+                        else if (layerDiff === 1 && sameBranch) connectionProbability = 0.8; // Misma rama, capa siguiente
+                        else if (layerDiff === 1) connectionProbability = 0.6; // Diferente rama, capa siguiente  
+                        else if (sameLayer && sameBranch) connectionProbability = 0.5; // Misma capa y rama
+                        else if (layerDiff < 0) connectionProbability = 0.2; // Conexiones hacia el centro (raras)
                         
-                        const maxDistance = (120 - neuron.layer * 10);
+                        const maxDistance = (150 - neuron.layer * 5);
                         
                         if (distance < maxDistance && Math.random() < connectionProbability) {
                             this.connections.push({
@@ -232,7 +232,7 @@
                             to: closestNeuron.index,
                             strength: Math.random() * 0.4 + 0.6,
                             signal: 0,
-                            signalSpeed: 0.015 + Math.random() * 0.025,
+                            signalSpeed: 0.005 + Math.random() * 0.015,
                             active: false,
                             lastActivation: 0
                         });
