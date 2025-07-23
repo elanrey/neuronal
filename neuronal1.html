@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transforma tu negocio con Inteligencia Artificial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #neuralCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-text {
+            max-width: 900px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-text h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #64ffda, #1de9b6, #00bcd4, #2196f3);
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 8s ease-in-out infinite;
+            line-height: 1.1;
+        }
+
+        .hero-text p {
+            font-size: 1.3rem;
+            color: #e0e6ed;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.2rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tech-indicators {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+            opacity: 0.7;
+        }
+
+        .tech-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: #64ffda;
+            font-size: 0.9rem;
+        }
+
+        .tech-dot {
+            width: 8px;
+            height: 8px;
+            background: #64ffda;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            .hero-text p {
+                font-size: 1.1rem;
+            }
+            .tech-indicators {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="neuralCanvas"></canvas>
+    
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Transforma tu negocio con Inteligencia Artificial</h1>
+            <p>Potencia la eficiencia y el crecimiento de tu empresa con soluciones innovadoras de IA y automatización. Desde la optimización de procesos hasta la toma de decisiones estratégicas inteligentes.</p>
+            <button class="cta-button">Descubre el futuro</button>
+        </div>
+    </div>
+
+    <div class="tech-indicators">
+        <div class="tech-indicator">
+            <div class="tech-dot"></div>
+            <span>Machine Learning</span>
+        </div>
+        <div class="tech-indicator">
+            <div class="tech-dot"></div>
+            <span>Deep Learning</span>
+        </div>
+        <div class="tech-indicator">
+            <div class="tech-dot"></div>
+            <span>Neural Networks</span>
+        </div>
+    </div>
+
+    <script>
+        class AINetworkBackground {
+            constructor() {
+                this.canvas = document.getElementById('neuralCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.nodes = [];
+                this.connections = [];
+                this.mousePos = { x: 0, y: 0 };
+                this.time = 0;
+                
+                this.resize();
+                this.init();
+                this.bindEvents();
+                this.animate();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.width = this.canvas.width;
+                this.height = this.canvas.height;
+            }
+
+            init() {
+                this.nodes = [];
+                this.connections = [];
+                
+                // Crear una red más espaciada y elegante
+                const nodeCount = Math.floor((this.width * this.height) / 25000);
+                
+                for (let i = 0; i < nodeCount; i++) {
+                    this.nodes.push({
+                        x: Math.random() * this.width,
+                        y: Math.random() * this.height,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.3,
+                        size: 1 + Math.random() * 2,
+                        energy: Math.random(),
+                        pulseOffset: Math.random() * Math.PI * 2,
+                        type: Math.random() > 0.7 ? 'core' : 'regular',
+                        connections: []
+                    });
+                }
+
+                // Crear conexiones elegantes
+                this.nodes.forEach((node, i) => {
+                    const maxConnections = node.type === 'core' ? 4 : 2;
+                    let connectionCount = 0;
+
+                    this.nodes.forEach((otherNode, j) => {
+                        if (i !== j && connectionCount < maxConnections) {
+                            const distance = this.distance(node, otherNode);
+                            const maxDistance = node.type === 'core' ? 200 : 150;
+                            
+                            if (distance < maxDistance && Math.random() > 0.85) {
+                                this.connections.push({
+                                    from: i,
+                                    to: j,
+                                    strength: Math.random() * 0.5 + 0.3,
+                                    pulse: 0,
+                                    speed: 0.005 + Math.random() * 0.01,
+                                    active: false
+                                });
+                                connectionCount++;
+                            }
+                        }
+                    });
+                });
+            }
+
+            distance(a, b) {
+                return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+            }
+
+            bindEvents() {
+                window.addEventListener('resize', () => {
+                    this.resize();
+                    this.init();
+                });
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    this.mousePos.x = e.clientX;
+                    this.mousePos.y = e.clientY;
+                });
+            }
+
+            drawNode(node, index) {
+                const mouseDistance = this.distance(node, this.mousePos);
+                const mouseInfluence = Math.max(0, 1 - mouseDistance / 200);
+                
+                // Movimiento sutil y orgánico
+                node.x += node.vx;
+                node.y += node.vy;
+                
+                // Mantener nodos en pantalla
+                if (node.x < 0 || node.x > this.width) node.vx *= -1;
+                if (node.y < 0 || node.y > this.height) node.vy *= -1;
+                
+                node.x = Math.max(0, Math.min(this.width, node.x));
+                node.y = Math.max(0, Math.min(this.height, node.y));
+
+                // Pulso energético
+                const pulse = Math.sin(this.time * 0.01 + node.pulseOffset) * 0.5 + 0.5;
+                const energy = (node.energy + pulse * 0.3 + mouseInfluence * 0.4) * 0.8;
+
+                // Colores más elegantes y tecnológicos
+                let color, glowColor;
+                if (node.type === 'core') {
+                    color = `rgba(100, 255, 218, ${energy * 0.9})`;
+                    glowColor = `rgba(100, 255, 218, ${energy * 0.3})`;
+                } else {
+                    color = `rgba(33, 150, 243, ${energy * 0.7})`;
+                    glowColor = `rgba(33, 150, 243, ${energy * 0.2})`;
+                }
+
+                const glowRadius = node.size * (2 + energy * 3);
+                
+                // Efecto de glow suave
+                const gradient = this.ctx.createRadialGradient(
+                    node.x, node.y, 0,
+                    node.x, node.y, glowRadius
+                );
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(0.5, glowColor);
+                gradient.addColorStop(1, 'rgba(100, 255, 218, 0)');
+
+                this.ctx.beginPath();
+                this.ctx.arc(node.x, node.y, glowRadius, 0, Math.PI * 2);
+                this.ctx.fillStyle = gradient;
+                this.ctx.fill();
+
+                // Núcleo del nodo
+                this.ctx.beginPath();
+                this.ctx.arc(node.x, node.y, node.size, 0, Math.PI * 2);
+                this.ctx.fillStyle = color;
+                this.ctx.fill();
+            }
+
+            drawConnection(connection) {
+                const fromNode = this.nodes[connection.from];
+                const toNode = this.nodes[connection.to];
+                
+                if (!fromNode || !toNode) return;
+
+                const distance = this.distance(fromNode, toNode);
+                if (distance > 250) return;
+
+                // Activación aleatoria de pulsos
+                if (!connection.active && Math.random() > 0.998) {
+                    connection.active = true;
+                    connection.pulse = 0;
+                }
+
+                // Opacidad basada en distancia y actividad
+                const opacity = (1 - distance / 250) * connection.strength * 0.4;
+                
+                // Línea de conexión sutil
+                this.ctx.beginPath();
+                this.ctx.moveTo(fromNode.x, fromNode.y);
+                this.ctx.lineTo(toNode.x, toNode.y);
+                this.ctx.strokeStyle = `rgba(100, 255, 218, ${opacity})`;
+                this.ctx.lineWidth = 0.5;
+                this.ctx.stroke();
+
+                // Pulso de datos viajando
+                if (connection.active) {
+                    connection.pulse += connection.speed;
+                    
+                    if (connection.pulse <= 1) {
+                        const t = connection.pulse;
+                        const pulseX = fromNode.x + (toNode.x - fromNode.x) * t;
+                        const pulseY = fromNode.y + (toNode.y - fromNode.y) * t;
+
+                        const pulseGradient = this.ctx.createRadialGradient(
+                            pulseX, pulseY, 0,
+                            pulseX, pulseY, 8
+                        );
+                        pulseGradient.addColorStop(0, 'rgba(100, 255, 218, 0.8)');
+                        pulseGradient.addColorStop(0.5, 'rgba(29, 233, 182, 0.4)');
+                        pulseGradient.addColorStop(1, 'rgba(100, 255, 218, 0)');
+
+                        this.ctx.beginPath();
+                        this.ctx.arc(pulseX, pulseY, 4, 0, Math.PI * 2);
+                        this.ctx.fillStyle = pulseGradient;
+                        this.ctx.fill();
+                    } else {
+                        connection.active = false;
+                        connection.pulse = 0;
+                    }
+                }
+            }
+
+            render() {
+                // Limpiar canvas con desvanecimiento suave
+                this.ctx.fillStyle = 'rgba(15, 15, 35, 0.1)';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+
+                // Dibujar conexiones primero
+                this.connections.forEach(connection => this.drawConnection(connection));
+                
+                // Dibujar nodos encima
+                this.nodes.forEach((node, index) => this.drawNode(node, index));
+            }
+
+            animate() {
+                this.time++;
+                this.render();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Inicializar cuando la página cargue
+        window.addEventListener('load', () => {
+            new AINetworkBackground();
+        });
+    </script>
+</body>
+</html>
