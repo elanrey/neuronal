@@ -127,7 +127,7 @@
                 const centerX = this.width / 2;
                 const centerY = this.height / 2;
                 const maxRadius = Math.min(this.width, this.height) * 1;
-                const neuronCount = Math.floor((this.width * this.height) / 4000);
+                const neuronCount = Math.floor((this.width * this.height) / 8000);
                 
                 // Crear capas de neuronas en estructura de árbol
                 const layers = 8;
@@ -163,7 +163,7 @@
                                 lastImpulse: 0,
                                 impulseDecay: 0.94 + Math.random() * 0.03,
                                 baseActivity: Math.random() * 0.05,
-                                brightness: Math.max(0.5, 0.5 - layer * 0.04) + Math.random() * 0.5,
+                                brightness: Math.max(0.01, 0.01 - layer * 0.01) + Math.random() * 0.01,
                                 type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
                                 receivedImpulse: false,
                                 isPacemaker: false,
@@ -217,7 +217,7 @@
                                 to: nearby.index,
                                 strength: Math.random() * 0.4 + 0.6,
                                 signal: 0,
-                                signalSpeed: 0.005 + Math.random() * 0.015,
+                                signalSpeed: 0.01 + Math.random() * 0.01, // Rango ajustado para ser más rápido
                                 active: false,
                                 lastActivation: 0
                             });
@@ -346,7 +346,7 @@
                     neuron.activity = 1.0;
                     neuron.lastImpulse = this.time;
                     neuron.receivedImpulse = true;
-                    neuron.nextSpontaneousImpulse = this.time + 5000 + Math.random() * 10000; // Impulso cada 5-15 segundos
+                    neuron.nextSpontaneousImpulse = this.time + 10000 + Math.random() * 20000; // Impulso cada 10-30 segundos
                 }
 
                 // Decaimiento de la actividad después de recibir impulso
@@ -371,9 +371,9 @@
                 }
                 
                 if (neuron.type === 'inhibitory') {
-                    baseColor = `rgba(147, 51, 234, ${glowIntensity * (neuron.brightness + 0.5)})`;
+                    baseColor = `rgba(107, 31, 204, ${glowIntensity * (neuron.brightness + 0.01)})`;
                 } else {
-                    baseColor = `rgba(59, 130, 246, ${glowIntensity * (neuron.brightness + 0.5)})`;
+                    baseColor = `rgba(39, 100, 216, ${glowIntensity * (neuron.brightness + 0.01)})`;
                 }
 
                 // Glow effect más dramático para impulsos
@@ -385,7 +385,7 @@
                 
                 gradient.addColorStop(0, baseColor);
                 gradient.addColorStop(0.4, neuron.receivedImpulse ? 
-                    `rgba(255, 255, 255, ${activity * 0.5})` : 
+                    `rgba(255, 255, 255, ${activity * 0.1})` : 
                     `rgba(255, 255, 255, ${activity * 0.3})`
                 );
                 gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
@@ -473,9 +473,9 @@
 
                 // Opacidad basada en fuerza de conexión y actividad
                 const baseOpacity = connection.strength * 0.15;
-                const activityBoost = (fromNeuron.receivedImpulse ? fromNeuron.activity * 0.3 : 0) + 
-                                   (toNeuron.receivedImpulse ? toNeuron.activity * 0.3 : 0);
-                const opacity = Math.min(0.6, baseOpacity + activityBoost);
+                const activityBoost = (fromNeuron.receivedImpulse ? fromNeuron.activity * 0.1 : 0) + 
+                                   (toNeuron.receivedImpulse ? toNeuron.activity * 0.1 : 0);
+                const opacity = Math.min(0.1, baseOpacity + activityBoost);
 
                 this.ctx.beginPath();
                 this.ctx.moveTo(fromNeuron.x, fromNeuron.y);
@@ -490,10 +490,10 @@
                     const signalX = fromNeuron.x + (toNeuron.x - fromNeuron.x) * t;
                     const signalY = fromNeuron.y + (toNeuron.y - fromNeuron.y) * t;
 
-                    const gradient = this.ctx.createRadialGradient(signalX, signalY, 0, signalX, signalY, 12);
-                    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                    gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.9)');
-                    gradient.addColorStop(0.7, 'rgba(147, 51, 234, 0.6)');
+                    const gradient = this.ctx.createRadialGradient(signalX, signalY, 0, signalX, signalY, 8);
+                    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
+                    gradient.addColorStop(0.3, 'rgba(59, 130, 246, 0.5)');
+                    gradient.addColorStop(0.7, 'rgba(147, 51, 234, 0.3)');
                     gradient.addColorStop(1, 'rgba(147, 51, 234, 0)');
 
                     this.ctx.beginPath();
@@ -533,7 +533,12 @@
                 this.connections.forEach(connection => this.drawConnection(connection));
                 
                 // Dibujar neuronas encima
-                this.neurons.forEach((neuron, index) => this.drawNeuron(neuron, index));
+                this.neurons.forEach((neuron, index) => {
+                    // Añadir un pequeño movimiento oscilatorio
+                    neuron.x += Math.sin(this.time * 0.01 + index) * Math.random();
+                    neuron.y += Math.cos(this.time * 0.01 + index) * Math.random();
+                    this.drawNeuron(neuron, index);
+                });
             }
 
             animate() {
