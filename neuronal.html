@@ -150,7 +150,7 @@
                         const finalRadius = layerRadius + radiusVariation;
                         
                         // Crear sub-ramas para estructura más orgánica
-                        const subBranchOffset = (Math.random() - 0.5) * 500;
+                        const subBranchOffset = (Math.random() - 0.5) * 1000;
                         
                         let x = centerX + Math.cos(finalAngle) * finalRadius + subBranchOffset;
                         let y = centerY + Math.sin(finalAngle) * finalRadius + subBranchOffset;
@@ -167,7 +167,8 @@
                                 type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
                                 receivedImpulse: false,
                                 isPacemaker: false,
-                                nextSpontaneousImpulse: this.time + Math.random() * 5000, // Inicializar impulso espontáneo
+                                nextSpontaneousImpulse: Math.random() * 15000, // Inicializar impulso espontáneo de forma más distribuida
+                                lastSender: -1, // Inicializar lastSender
                                 layer: layer,
                                 branchAngle: branchAngle
                             });
@@ -176,7 +177,7 @@
 
                 // Crear conexiones privilegiando conexiones hacia capas externas (tipo árbol)
                 this.neurons.forEach((neuron, i) => {
-                    const maxConnections = (3 - Math.floor(neuron.layer / 3));
+                    const maxConnections = 3;
                     let connectionCount = 0;
 
                     // Ordenar neuronas por distancia
@@ -216,7 +217,7 @@
                                 to: nearby.index,
                                 strength: Math.random() * 0.4 + 0.6,
                                 signal: 0,
-                                signalSpeed: 0.015 + Math.random() * 0.025,
+                                signalSpeed: 0.005 + Math.random() * 0.015,
                                 active: false,
                                 lastActivation: 0
                             });
@@ -345,7 +346,7 @@
                     neuron.activity = 1.0;
                     neuron.lastImpulse = this.time;
                     neuron.receivedImpulse = true;
-                    neuron.nextSpontaneousImpulse = this.time + 2000 + Math.random() * 5000; // Impulso cada 2-7 segundos
+                    neuron.nextSpontaneousImpulse = this.time + 5000 + Math.random() * 10000; // Impulso cada 5-15 segundos
                 }
 
                 // Decaimiento de la actividad después de recibir impulso
@@ -366,7 +367,7 @@
                 let glowIntensity = activity;
                 
                 if (neuron.receivedImpulse) {
-                    glowIntensity = Math.min(1, activity * 1.5); // Brillo mucho mayor cuando reciben impulso
+                    glowIntensity = Math.min(1, activity * 1.0); // Brillo reducido cuando reciben impulso
                 }
                 
                 if (neuron.type === 'inhibitory') {
@@ -384,7 +385,7 @@
                 
                 gradient.addColorStop(0, baseColor);
                 gradient.addColorStop(0.4, neuron.receivedImpulse ? 
-                    `rgba(255, 255, 255, ${activity * 0.8})` : 
+                    `rgba(255, 255, 255, ${activity * 0.5})` : 
                     `rgba(255, 255, 255, ${activity * 0.3})`
                 );
                 gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
@@ -398,7 +399,7 @@
                 this.ctx.beginPath();
                 this.ctx.arc(neuron.x, neuron.y, neuron.size, 0, Math.PI * 2);
                 const coreOpacity = neuron.receivedImpulse ? 
-                    0.7 + activity * 0.05 : 
+                    0.7 + activity * 0.02 : 
                     0.6 + activity * 0.3;
                 this.ctx.fillStyle = `rgba(255, 255, 255, ${coreOpacity})`;
                 this.ctx.fill();
@@ -436,7 +437,19 @@
 
                 // Activación de sinapsis basada en actividad neuronal alta
                 const fromActivity = fromNeuron.activity;
-                const shouldActivate = fromNeuron.receivedImpulse && fromActivity > 0.6 && Math.random() > 0.8;
+                let shouldActivate = fromNeuron.receivedImpulse && fromActivity > 0.6 && Math.random() > 0.8;
+
+                // Nueva lógica para evitar que los impulsos regresen al remitente
+                if (shouldActivate && connection.to === fromNeuron.lastSender) {
+                    // Verificar si hay otras conexiones salientes que no regresen al remitente
+                    const otherOutgoingConnections = this.connections.filter(conn =>
+                        conn.from === connection.from && conn.to !== fromNeuron.lastSender
+                    );
+                    if (otherOutgoingConnections.length > 0) {
+                        // Si hay otras opciones, no activar esta conexión de retorno
+                        shouldActivate = false;
+                    }
+                }
                 
                 if (shouldActivate && !connection.active) {
                     connection.active = true;
@@ -454,6 +467,7 @@
                         toNeuron.activity = 1.0;
                         toNeuron.lastImpulse = this.time;
                         toNeuron.receivedImpulse = true;
+                        toNeuron.lastSender = connection.from; // Registrar la neurona que envió el impulso
                     }
                 }
 
