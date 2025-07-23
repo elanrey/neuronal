@@ -136,56 +136,30 @@
                 this.neurons = [];
                 this.connections = [];
                 
-                // Crear estructura tipo árbol desde el centro
-                const centerX = this.width / 2;
-                const centerY = this.height / 2;
-                const maxRadius = Math.min(this.width, this.height) * 1;
-                const neuronCount = Math.floor((this.width * this.height) / 8000);
+                // Generar neuronas distribuidas homogéneamente
+                const neuronCount = Math.floor((this.width * this.height) / 7000); // Ajustar densidad de neuronas
                 
-                // Crear capas de neuronas en estructura de árbol
-                const layers = 8;
-                const neuronsPerLayer = Math.floor(neuronCount / layers);
-                
-                for (let layer = 1; layer <= layers; layer++) {
-                    const layerRadius = (layer / layers) * maxRadius;
-                    const neuronsInThisLayer = Math.floor(neuronsPerLayer * (1 + layer * 0.3)); // Más neuronas en capas externas
+                for (let i = 0; i < neuronCount; i++) {
+                    const x = Math.random() * this.width;
+                    const y = Math.random() * this.height;
                     
-                    for (let n = 0; n < neuronsInThisLayer; n++) {
-                        // Crear ramas principales
-                        const branchCount = 6 + layer * 2; // Más ramas en capas externas
-                        const branchIndex = Math.floor(Math.random() * branchCount);
-                        const branchAngle = (branchIndex / branchCount) * Math.PI * 2;
-                        
-                        // Agregar variación orgánica
-                        const angleVariation = (Math.random() - 0.5) * (Math.PI / 4); // ±45 grados
-                        const radiusVariation = (Math.random() - 0.5) * layerRadius * 0.3; // Aumentar la variación de radio
-                        const finalAngle = branchAngle + angleVariation;
-                        const finalRadius = layerRadius + radiusVariation;
-                        
-                        // Crear sub-ramas para estructura más orgánica
-                        const subBranchOffset = (Math.random() - 0.5) * 500; // Aumentar el offset de sub-rama
-                        
-                        let x = centerX + Math.cos(finalAngle) * finalRadius + subBranchOffset;
-                        let y = centerY + Math.sin(finalAngle) * finalRadius + subBranchOffset;
-                        
-                        this.neurons.push({
-                                x: x,
-                                y: y,
-                                size: Math.max(1, 2 - layer * 0.2) + Math.random() * 1.5,
-                                activity: 0,
-                                lastImpulse: 0,
-                                impulseDecay: 0.94 + Math.random() * 0.03,
-                                baseActivity: Math.random() * 0.02,
-                                brightness: Math.max(0.005, 0.005 - layer * 0.005) + Math.random() * 0.005,
-                                type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
-                                receivedImpulse: false,
-                                isPacemaker: false,
-                                nextSpontaneousImpulse: Math.random() * 15000, // Inicializar impulso espontáneo de forma más distribuida
-                                lastSender: -1, // Inicializar lastSender
-                                layer: layer,
-                                branchAngle: branchAngle
-                            });
-                    }
+                    this.neurons.push({
+                        x: x,
+                        y: y,
+                        size: 1.5 + Math.random() * 1.5, // Tamaño de neurona ajustado
+                        activity: 0,
+                        lastImpulse: 0,
+                        impulseDecay: 0.94 + Math.random() * 0.03,
+                        baseActivity: Math.random() * 0.02,
+                        brightness: 0.005 + Math.random() * 0.005,
+                        type: Math.random() > 0.15 ? 'excitatory' : 'inhibitory',
+                        receivedImpulse: false,
+                        isPacemaker: false,
+                        nextSpontaneousImpulse: Math.random() * 15000,
+                        lastSender: -1,
+                        layer: 0, // Ya no hay capas, se puede mantener o eliminar
+                        branchAngle: 0 // Ya no hay ramas, se puede mantener o eliminar
+                    });
                 }
 
                 // Crear conexiones privilegiando conexiones hacia capas externas (tipo árbol)
@@ -626,6 +600,11 @@
                     const randomMovementScale = 0.5; // Ajusta este valor para más o menos movimiento
                     neuron.x += (Math.random() - 0.5) * randomMovementScale;
                     neuron.y += (Math.random() - 0.5) * randomMovementScale;
+
+                    // Asegurar que la neurona no se salga de los límites de la pantalla
+                    neuron.x = Math.max(0, Math.min(this.width, neuron.x));
+                    neuron.y = Math.max(0, Math.min(this.height, neuron.y));
+
                     this.drawNeuron(neuron, index);
                 });
             }
