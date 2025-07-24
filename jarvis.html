@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. UI - Step 22 (Adjusted Middle Arc Left)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --base-color: #00d9ff; /* Cian original */
+            --background-color: #00050a;
+
+            --color-level-1: #00d9ff; /* Cian para el núcleo */
+            --color-level-2: #FF0000; /* Rojo para VU Meter */
+            --color-level-3: #00FF00; /* Verde para el arco de 180 */
+            --color-level-4: #8A2BE2; /* Púrpura para el grupo sincronizado */
+            --color-level-5: #FFFF00; /* Amarillo para el anillo de texto */
+            --color-level-6: #FFA500; /* Naranja para el anillo de puntos */
+            --color-level-7: #00FFFF; /* Aqua para el anillo exterior complejo */
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        #jarvis-interface {
+            width: 600px;
+            height: 600px;
+        }
+
+        /* El efecto de resplandor ahora usará el color del elemento */
+        .glow-effect g, .glow-effect circle, .glow-effect path, .glow-effect text {
+            filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 12px currentColor);
+        }
+
+        .ring {
+            fill: none;
+        }
+
+        /* --- Componentes Específicos con Colores --- */
+
+        /* 1. El Núcleo */
+        #core-text {
+            fill: #ffffff;
+            font-size: 40px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            stroke: var(--color-level-1); /* El texto también tendrá un resplandor de su color */
+            stroke-width: 0.5;
+        }
+
+        #core-ring {
+            stroke: var(--color-level-1);
+            stroke-width: 3;
+        }
+
+        /* 2. Anillo VU Meter */
+        #vu-meter-ring {
+            stroke: var(--color-level-2);
+            stroke-width: 14;
+            stroke-dasharray: 10 5;
+        }
+
+        /* 3. Arco de 180 grados */
+        #dashed-arc {
+            stroke: var(--color-level-3);
+            stroke-width: 2;
+            stroke-dasharray: 2 10;
+        }
+
+        /* 4. Grupo de Arcos Sincronizados */
+        #synchronized-arcs-group path, #synchronized-arcs-group line {
+            stroke: var(--color-level-4);
+            stroke-width: 1.5;
+        }
+
+        /* 5. Anillo de Texto (Ceros) */
+        #text-arc-group text {
+            fill: var(--color-level-5);
+            font-size: 12px;
+            letter-spacing: 4px;
+        }
+
+        /* El trazado invisible no necesita color de stroke */
+        #text-path-track {
+            stroke: none;
+        }
+
+        /* 6. Anillo de Puntos Finos */
+        #dotted-ring {
+            stroke: var(--color-level-6);
+            stroke-width: 1;
+            stroke-dasharray: 1 5; /* Punto de 1px, espacio de 5px */
+        }
+
+        /* 7. Anillo Exterior Complejo */
+        #outer-complex-ring-group path {
+            stroke: var(--color-level-7);
+            stroke-width: 2;
+        }
+
+        #outer-complex-ring-group .dashed-segment {
+            stroke-dasharray: 5 10;
+        }
+
+        #outer-complex-ring-group .sawtooth-segment {
+            stroke-dasharray: 2 5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <svg id="jarvis-interface" viewBox="-300 -300 600 600">
+        <!-- Definiciones para elementos reutilizables -->
+        <defs>
+            <!-- Trazado invisible para el texto en arco -->
+            <path id="text-path-track" d="M -220 0 A 220 220 0 0 1 220 0" />
+        </defs>
+
+        <!-- El efecto de resplandor ahora se aplica a los elementos individuales para usar su color -->
+        <g>
+            
+            <!-- Núcleo Estático -->
+            <g id="core">
+                <circle id="core-ring" class="ring" r="120" />
+                <text id="core-text" y="5">J.A.R.V.I.S</text>
+            </g>
+
+            <!-- Anillo 1: VU Meter -->
+            <circle id="vu-meter-ring" class="ring" r="140">
+                <animate attributeName="stroke-dashoffset" from="0" to="15" dur="0.5s" repeatCount="indefinite" />
+            </circle>
+
+            <!-- Anillo 2: Arco de 180 grados -->
+            <path id="dashed-arc" class="ring" d="M -160 0 A 160 160 0 0 1 160 0">
+                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="30s" repeatCount="indefinite" />
+            </path>
+
+            <!-- Grupo de Arcos Sincronizados -->
+            <g id="synchronized-arcs-group">
+                <!-- Arco Exterior Grande (130 grados, r=200) -->
+                <path id="outer-arc-130" class="ring" d="M -181.26 -84.52 A 200 200 0 0 1 181.26 -84.52" />
+
+                <!-- Arcos Intermedios (r=190) - PRECISOS -->
+                <path id="middle-arc-left" class="ring" d="M -164.54 -95.0 A 190 190 0 0 1 -95.0 -164.54" />
+                <path id="middle-arc-right" class="ring" d="M 79.5 -172.6 A 190 190 0 0 1 171.0 -81.7" />
+
+                <!-- Arco Exterior Pequeño (110 grados, r=180) - RESTAURADO -->
+                <path id="outer-arc-110" class="ring" d="M -90.0 -155.88 A 180 180 0 0 1 147.45 -103.14" />
+
+                <!-- Líneas de Conexión -->
+                <line class="arc-connector ring" x1="147.45" y1="-103.14" x2="181.26" y2="-84.52" />
+                <line class="arc-connector ring" x1="-181.26" y1="-84.52" x2="-164.54" y2="-95.0" />
+
+                <!-- Animación única para todo el grupo -->
+                <animateTransform 
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="360 0 0"
+                    dur="45s"
+                    repeatCount="indefinite" />
+            </g>
+
+            <!-- Anillo de Texto (Ceros) -->
+            <g id="text-arc-group">
+                <text>
+                    <textPath href="#text-path-track">00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</textPath>
+                </text>
+                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="60s" repeatCount="indefinite" />
+            </g>
+
+            <!-- Anillo 6: Puntos Finos -->
+            <circle id="dotted-ring" class="ring" r="240">
+                <animateTransform 
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="360 0 0"
+                    dur="70s"
+                    repeatCount="indefinite" />
+            </circle>
+
+            <!-- Anillo 7: Exterior Complejo -->
+            <g id="outer-complex-ring-group">
+                <!-- Segmento Sólido (ejemplo: un arco de 60 grados) -->
+                <path class="ring" d="M 280 0 A 280 280 0 0 1 140 242.49" />
+
+                <!-- Segmento con Guiones (ejemplo: un arco de 90 grados) -->
+                <path class="ring dashed-segment" d="M 140 242.49 A 280 280 0 0 1 -280 0" />
+
+                <!-- Segmento Sawtooth/Medidor (ejemplo: un arco de 45 grados) -->
+                <path class="ring sawtooth-segment" d="M -280 0 A 280 280 0 0 1 -197.99 -197.99" />
+
+                <animateTransform 
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="-360 0 0"
+                    dur="80s"
+                    repeatCount="indefinite" />
+            </g>
+
+        </g>
+    </svg>
+
+</body>
+</html>
