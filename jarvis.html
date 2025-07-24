@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. UI - Step 22 (Adjusted Middle Arc Left)</title>
+    <title>J.A.R.V.I.S. UI - Step 23 (Medium Dashed Ring)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
@@ -18,6 +18,7 @@
             --color-level-5: #FFFF00; /* Amarillo para el anillo de texto */
             --color-level-6: #FFA500; /* Naranja para el anillo de puntos */
             --color-level-7: #00FFFF; /* Aqua para el anillo exterior complejo */
+            --color-level-8: #FF00FF; /* Magenta para el anillo de guiones medianos */
         }
 
         body {
@@ -117,6 +118,13 @@
             stroke-dasharray: 2 5;
         }
 
+        /* 8. Anillo de Guiones Medianos */
+        #medium-dashed-ring {
+            stroke: var(--color-level-8);
+            stroke-width: 1.5;
+            stroke-dasharray: 5 15; /* Guiones de 5px, espacio de 15px */
+        }
+
     </style>
 </head>
 <body>
@@ -153,15 +161,17 @@
                 <path id="outer-arc-130" class="ring" d="M -181.26 -84.52 A 200 200 0 0 1 181.26 -84.52" />
 
                 <!-- Arcos Intermedios (r=190) - PRECISOS -->
-                <path id="middle-arc-left" class="ring" d="M -164.54 -95.0 A 190 190 0 0 1 -95.0 -164.54" />
-                <path id="middle-arc-right" class="ring" d="M 79.5 -172.6 A 190 190 0 0 1 171.0 -81.7" />
+                <path id="middle-arc-left" class="ring" d="M -164.54 -95.0 A 190 190 0 0 1 -108.97 -155.63" />
+                <path id="middle-arc-right" class="ring" d="M 79.5 -172.6 A 190 190 0 0 1 165.0 -95.0" />
 
                 <!-- Arco Exterior Pequeño (110 grados, r=180) - RESTAURADO -->
-                <path id="outer-arc-110" class="ring" d="M -90.0 -155.88 A 180 180 0 0 1 147.45 -103.14" />
+                <path id="outer-arc-110" class="ring" d="M -90.0 -155.88 A 180 180 0 0 1 61.56 -169.02" />
 
                 <!-- Líneas de Conexión -->
-                <line class="arc-connector ring" x1="147.45" y1="-103.14" x2="181.26" y2="-84.52" />
+                <line class="arc-connector ring" x1="165.0" y1="-95.0" x2="181.26" y2="-84.52" />
                 <line class="arc-connector ring" x1="-181.26" y1="-84.52" x2="-164.54" y2="-95.0" />
+                <line class="arc-connector ring" x1="-108.97" y1="-155.63" x2="-90.0" y2="-155.88" />
+                <line class="arc-connector ring" x1="61.56" y1="-169.02" x2="79.5" y2="-172.6" />
 
                 <!-- Animación única para todo el grupo -->
                 <animateTransform 
@@ -211,6 +221,17 @@
                     dur="80s"
                     repeatCount="indefinite" />
             </g>
+
+            <!-- Anillo 8: Guiones Medianos -->
+            <circle id="medium-dashed-ring" class="ring" r="260">
+                <animateTransform 
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="360 0 0"
+                    dur="90s"
+                    repeatCount="indefinite" />
+            </circle>
 
         </g>
     </svg>
