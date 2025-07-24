@@ -22,6 +22,8 @@
             --color-level-9: #00FF7F; /* Verde primavera para el arco grueso con blur */
             --color-level-11: #FF8C00; /* Naranja oscuro para el arco de volumen */
             --color-level-12: #00BFFF; /* Azul cielo para el nuevo arco */
+            --hal-glow-color: #FF0000; /* Rojo para el ojo de HAL 9000 */
+            --hal-yellow-dot-color: #FFFF00; /* Amarillo para el punto central de HAL 9000 */
         }
 
         body {
@@ -105,7 +107,7 @@
         /* 5. Anillo de Texto (Ceros) */
         #text-arc-group text {
             fill: var(--color-level-5);
-            font-size: 12px;
+            font-size: 9px;
             letter-spacing: 4px;
         }
 
@@ -206,6 +208,36 @@
                 </feMerge>
             </filter>
 
+            <!-- Filtro de Resplandor para HAL 9000 -->
+            <filter id="hal-glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0" result="blur-hal">
+                    <animate attributeName="stdDeviation" values="5;15;5" dur="3s" repeatCount="indefinite" />
+                </feGaussianBlur>
+                <feMerge>
+                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="blur-hal"/>
+                </feMerge>
+            </filter>
+
+            <!-- Filtro de Resplandor Fijo para el punto amarillo -->
+            <filter id="fixed-yellow-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur-yellow" />
+                <feMerge>
+                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="blur-yellow"/>
+                </feMerge>
+            </filter>
+
+            <!-- Filtro de Resplandor Blanco Sutil para los arcos de vidrio -->
+            <filter id="white-arc-glow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur-white-arc" />
+                <feFlood flood-color="#FFFFFF" flood-opacity="1" result="color-white-arc" />
+                <feComposite in="color-white-arc" in2="blur-white-arc" operator="in" result="glow-white-arc" />
+                <feMerge>
+                    <feMergeNode in="glow-white-arc"/>
+                </feMerge>
+            </filter>
+
             <!-- Máscara para desvanecer la línea roja en un lado -->
             <mask id="red-fade-mask">
                 <linearGradient id="mask-gradient" x1="50%" y1="0%" x2="100%" y2="0%">
@@ -223,7 +255,19 @@
 
         <!-- El efecto de resplandor ahora se aplica a los elementos individuales para usar su color -->
         <g>
-            
+            <!-- Base de vidrio para el ojo de HAL 9000 -->
+            <circle cx="0" cy="0" r="60" fill="url(#glass-gradient)" />
+            <!-- Brillo especular para el ojo de HAL 9000 -->
+            <circle cx="0" cy="0" r="60" fill="url(#specular-highlight)" />
+            <!-- Ojo de HAL 9000 -->
+            <circle cx="0" cy="0" r="40" fill="var(--hal-glow-color)" filter="url(#hal-glow-filter)" />
+            <!-- Punto amarillo brillante -->
+            <circle cx="0" cy="0" r="8" fill="var(--hal-yellow-dot-color)" filter="url(#fixed-yellow-glow)" />
+
+            <!-- Arcos de efecto de vidrio -->
+            <path d="M -60 -60 A 60 60 0 0 1 -20 -80" fill="none" stroke="#FFFFFF" stroke-width="8" filter="url(#white-arc-glow)" />
+            <path d="M -50 -50 A 40 40 0 0 1 -20 -65" fill="none" stroke="#FFFFFF" stroke-width="4" filter="url(#white-arc-glow)" />
+                        
             <!-- Círculo Exterior Grande con Glow -->
             <circle id="outer-glow-ring" class="ring" r="290" stroke="var(--color-level-1)" stroke-width="5" filter="url(#glow-filter)" />
 
@@ -303,7 +347,7 @@
             <!-- Anillo de Texto (Ceros) -->
             <g id="text-arc-group">
                 <text>
-                    <textPath href="#text-path-track">0100000101110101011101000110111101101101011000010100100101000001</textPath>
+                    <textPath href="#text-path-track">01000001 01110101 01110100 01101111 01101101 01100001 01110100 01001001 01000001</textPath>
                 </text>
                 <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="60s" repeatCount="indefinite" />
             </g>
