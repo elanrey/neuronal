@@ -117,8 +117,14 @@
         /* 6. Anillo de Puntos Finos */
         #dotted-ring {
             stroke: var(--color-level-6);
-            stroke-width: 4;
-            stroke-dasharray: 1 5; /* Punto de 1px, espacio de 5px */
+            stroke-width: 8;
+            stroke-dasharray: 1 5; /* Punto de 5px, espacio de 10px */
+        }
+
+        #dotted-ring-large {
+            stroke: var(--color-level-6);
+            stroke-width: 14;
+            stroke-dasharray: 3 30; /* Punto de 5px, espacio de 10px */
         }
 
         /* 7. Anillo Exterior Complejo */
@@ -302,8 +308,58 @@
                 <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="60s" repeatCount="indefinite" />
             </g>
 
+            <!-- Grupo de Puntos Animados -->
+            <g id="animated-dots-group">
+                <circle cx="-240.00" cy="0.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0s" repeatCount="indefinite" /></circle>
+                <circle cx="-236.40" cy="-41.68" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.105s" repeatCount="indefinite" /></circle>
+                <circle cx="-225.53" cy="-82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.210s" repeatCount="indefinite" /></circle>
+                <circle cx="-207.85" cy="-120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.316s" repeatCount="indefinite" /></circle>
+                <circle cx="-183.85" cy="-154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.421s" repeatCount="indefinite" /></circle>
+                <circle cx="-154.27" cy="-183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.526s" repeatCount="indefinite" /></circle>
+                <circle cx="-120.00" cy="-207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.631s" repeatCount="indefinite" /></circle>
+                <circle cx="-82.08" cy="-225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.737s" repeatCount="indefinite" /></circle>
+                <circle cx="-41.68" cy="-236.40" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.842s" repeatCount="indefinite" /></circle>
+                <circle cx="0.00" cy="-240.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.947s" repeatCount="indefinite" /></circle>
+                <circle cx="41.68" cy="-236.40" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.053s" repeatCount="indefinite" /></circle>
+                <circle cx="82.08" cy="-225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.158s" repeatCount="indefinite" /></circle>
+                <circle cx="120.00" cy="-207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.263s" repeatCount="indefinite" /></circle>
+                <circle cx="154.27" cy="-183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.368s" repeatCount="indefinite" /></circle>
+                <circle cx="183.85" cy="-154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.474s" repeatCount="indefinite" /></circle>
+                <circle cx="207.85" cy="-120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.579s" repeatCount="indefinite" /></circle>
+                <circle cx="225.53" cy="-82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.684s" repeatCount="indefinite" /></circle>
+                <circle cx="236.40" cy="-41.68" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.789s" repeatCount="indefinite" /></circle>
+                <circle cx="240.00" cy="0.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.895s" repeatCount="indefinite" /></circle>
+                <circle cx="236.35" cy="41.66" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.000s" repeatCount="indefinite" /></circle>
+                <circle cx="225.53" cy="82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.105s" repeatCount="indefinite" /></circle>
+                <circle cx="207.85" cy="120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.210s" repeatCount="indefinite" /></circle>
+                <circle cx="183.85" cy="154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.316s" repeatCount="indefinite" /></circle>
+                <circle cx="154.27" cy="183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.421s" repeatCount="indefinite" /></circle>
+                <circle cx="120.00" cy="207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.526s" repeatCount="indefinite" /></circle>
+                <circle cx="82.08" cy="225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.631s" repeatCount="indefinite" /></circle>
+                <circle cx="41.66" cy="236.35" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.737s" repeatCount="indefinite" /></circle>
+                <circle cx="0.00" cy="240.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.842s" repeatCount="indefinite" /></circle>
+                <circle cx="-41.66" cy="236.35" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.947s" repeatCount="indefinite" /></circle>
+                <circle cx="-82.08" cy="225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.053s" repeatCount="indefinite" /></circle>
+                <circle cx="-120.00" cy="207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.158s" repeatCount="indefinite" /></circle>
+                <circle cx="-154.27" cy="183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.263s" repeatCount="indefinite" /></circle>
+                <circle cx="-183.85" cy="154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.368s" repeatCount="indefinite" /></circle>
+                <circle cx="-207.85" cy="120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.474s" repeatCount="indefinite" /></circle>
+                <circle cx="-225.53" cy="82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.579s" repeatCount="indefinite" /></circle>
+                <circle cx="-236.35" cy="41.66" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.684s" repeatCount="indefinite" /></circle>
+            </g>
+
             <!-- Anillo 6: Puntos Finos -->
+            <circle id="dotted-ring-base" class="ring" r="165" stroke="var(--color-level-6)" stroke-width="1" />
             <circle id="dotted-ring" class="ring" r="170">
+                <animateTransform 
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="360 0 0"
+                    dur="20s"
+                    repeatCount="indefinite" />
+            </circle>
+            <circle id="dotted-ring-large" class="ring" r="171">
                 <animateTransform 
                     attributeName="transform"
                     type="rotate"
@@ -334,7 +390,7 @@
             </g>
 
             <!-- Anillo 9: Arco Grueso con Blur -->
-            <path id="thick-blurred-arc" class="ring" d="M -33.86 192.0 A 195 195 0 0 1 0 -195">
+            <path id="thick-blurred-arc" class="ring" d="M -35.60 201.88 A 205 205 0 0 1 0 -205">
                 <animateTransform 
                     attributeName="transform"
                     type="rotate"
