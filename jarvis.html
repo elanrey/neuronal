@@ -36,8 +36,8 @@
         }
 
         #jarvis-interface {
-            width: 600px;
-            height: 600px;
+            width: 800px;
+            height: 800px;
         }
 
         /* El efecto de resplandor ahora usará el color del elemento */
@@ -54,7 +54,7 @@
         /* 1. El Núcleo */
         #core-text {
             fill: #ffffff;
-            font-size: 40px;
+            font-size: 18px;
             font-weight: bold;
             letter-spacing: 8px;
             text-anchor: middle;
@@ -71,8 +71,8 @@
         /* 2. Anillo VU Meter */
         #vu-meter-ring {
             stroke: var(--color-level-2);
-            stroke-width: 14;
-            stroke-dasharray: 10 5;
+            stroke-width: 20;
+            stroke-dasharray: 20 5;
         }
 
         /* 3. Arco de 180 grados */
@@ -117,14 +117,14 @@
         /* 6. Anillo de Puntos Finos */
         #dotted-ring {
             stroke: var(--color-level-6);
-            stroke-width: 1;
+            stroke-width: 4;
             stroke-dasharray: 1 5; /* Punto de 1px, espacio de 5px */
         }
 
         /* 7. Anillo Exterior Complejo */
         #outer-complex-ring-group path {
             stroke: var(--color-level-7);
-            stroke-width: 2;
+            stroke-width: 5;
         }
 
         #outer-complex-ring-group .dashed-segment {
@@ -132,7 +132,7 @@
         }
 
         #outer-complex-ring-group .sawtooth-segment {
-            stroke-dasharray: 2 5;
+            stroke-dasharray: 1 5;
         }
 
         /* 8. Anillo de Guiones Medianos */
@@ -155,7 +155,7 @@
 </head>
 <body>
 
-    <svg id="jarvis-interface" viewBox="-300 -300 600 600">
+    <svg id="jarvis-interface" viewBox="-400 -400 800 800">
         <!-- Definiciones para elementos reutilizables -->
         <defs>
             <!-- Trazado invisible para el texto en arco -->
@@ -163,7 +163,41 @@
 
             <!-- Filtro de Desenfoque (Blur) -->
             <filter id="blur-filter">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="7" />
+            </filter>
+
+            <!-- Filtro de Resplandor (Glow) -->
+            <filter id="glow-filter" x="-100%" y="-100%" width="250%" height="250%">
+                <!-- Capa 1 de resplandor -->
+                <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur1" />
+                <feFlood flood-color="var(--color-level-1)" flood-opacity="1" result="color1" />
+                <feComposite in="color1" in2="blur1" operator="in" result="glow1" />
+
+                <!-- Capa 2 de resplandor -->
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur2" />
+                <feFlood flood-color="var(--color-level-1)" flood-opacity="1" result="color2" />
+                <feComposite in="color2" in2="blur2" operator="in" result="glow2" />
+
+                <!-- Capa 3 de resplandor -->
+                <feGaussianBlur in="SourceGraphic" stdDeviation="50" result="blur3" />
+                <feFlood flood-color="var(--color-level-1)" flood-opacity="1" result="color3" />
+                <feComposite in="color3" in2="blur3" operator="in" result="glow3" />
+
+                <!-- Capa 4 de resplandor -->
+                <feGaussianBlur in="SourceGraphic" stdDeviation="60" result="blur4" />
+                <feFlood flood-color="var(--color-level-1)" flood-opacity="1" result="color4" />
+                <feComposite in="color4" in2="blur4" operator="in" result="glow4" />
+
+                <feMerge>
+                    <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="glow1"/>
+                    <feMergeNode in="glow1"/>
+                    <feMergeNode in="glow1"/>
+                    <feMergeNode in="glow1"/>
+                    <feMergeNode in="glow1"/>
+                    <feMergeNode in="glow1"/>
+                    <feMergeNode in="glow1"/>
+                </feMerge>
             </filter>
 
             <!-- Máscara para desvanecer la línea roja en un lado -->
@@ -184,14 +218,17 @@
         <!-- El efecto de resplandor ahora se aplica a los elementos individuales para usar su color -->
         <g>
             
+            <!-- Círculo Exterior Grande con Glow -->
+            <circle id="outer-glow-ring" class="ring" r="290" stroke="var(--color-level-1)" stroke-width="5" filter="url(#glow-filter)" />
+
             <!-- Núcleo Estático -->
             <g id="core">
-                <circle id="core-ring" class="ring" r="120" />
-                
+                <circle id="core-ring" class="ring" r="160" />
+                <text id="core-text" x="0" y="0">AutomatIA</text>
             </g>
 
             <!-- Anillo 1: VU Meter -->
-            <circle id="vu-meter-ring" class="ring" r="100">
+            <circle id="vu-meter-ring" class="ring" r="110">
                 <animate attributeName="stroke-dashoffset" from="629" to="0" dur="2s" repeatCount="indefinite" />
             </circle>
 
@@ -253,7 +290,7 @@
                     type="rotate"
                     from="0 0 0"
                     to="360 0 0"
-                    dur="45s"
+                    dur="40s"
                     repeatCount="indefinite" />
             </g>
 
@@ -266,13 +303,13 @@
             </g>
 
             <!-- Anillo 6: Puntos Finos -->
-            <circle id="dotted-ring" class="ring" r="240">
+            <circle id="dotted-ring" class="ring" r="170">
                 <animateTransform 
                     attributeName="transform"
                     type="rotate"
                     from="0 0 0"
                     to="360 0 0"
-                    dur="70s"
+                    dur="20s"
                     repeatCount="indefinite" />
             </circle>
 
@@ -292,7 +329,7 @@
                     type="rotate"
                     from="0 0 0"
                     to="-360 0 0"
-                    dur="80s"
+                    dur="5s"
                     repeatCount="indefinite" />
             </g>
 
@@ -317,6 +354,10 @@
                     dur="90s"
                     repeatCount="indefinite" />
             </circle>
+
+            
+
+            
 
             
 
