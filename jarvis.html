@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>J.A.R.V.I.S. UI - Step 23 (Medium Dashed Ring)</title>
+    <title>J.A.R.V.I.S. UI - Step 24 (Thick Blurred Arc)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
@@ -19,6 +19,9 @@
             --color-level-6: #FFA500; /* Naranja para el anillo de puntos */
             --color-level-7: #00FFFF; /* Aqua para el anillo exterior complejo */
             --color-level-8: #FF00FF; /* Magenta para el anillo de guiones medianos */
+            --color-level-9: #00FF7F; /* Verde primavera para el arco grueso con blur */
+            --color-level-11: #FF8C00; /* Naranja oscuro para el arco de volumen */
+            --color-level-12: #00BFFF; /* Azul cielo para el nuevo arco */
         }
 
         body {
@@ -79,6 +82,20 @@
             stroke-dasharray: 2 10;
         }
 
+        /* 11. Nuevo Arco de Cuadritos (Volumen) */
+        #volume-arc {
+            stroke: var(--color-level-11);
+            stroke-width: 5;
+            stroke-dasharray: 10 10; /* Cuadritos de 10px, espacio de 10px */
+        }
+
+        /* 12. Nuevo Arco Cerca del Volumen */
+        #new-arc {
+            stroke: var(--color-level-12);
+            stroke-width: 1.5;
+            stroke-dasharray: none;
+        }
+
         /* 4. Grupo de Arcos Sincronizados */
         #synchronized-arcs-group path, #synchronized-arcs-group line {
             stroke: var(--color-level-4);
@@ -125,6 +142,15 @@
             stroke-dasharray: 5 15; /* Guiones de 5px, espacio de 15px */
         }
 
+        /* 9. Arco Grueso con Blur */
+        #thick-blurred-arc {
+            stroke: var(--color-level-9);
+            stroke-width: 8;
+            filter: url(#blur-filter); /* Aplicar el filtro de desenfoque */
+        }
+
+        
+
     </style>
 </head>
 <body>
@@ -134,6 +160,25 @@
         <defs>
             <!-- Trazado invisible para el texto en arco -->
             <path id="text-path-track" d="M -220 0 A 220 220 0 0 1 220 0" />
+
+            <!-- Filtro de Desenfoque (Blur) -->
+            <filter id="blur-filter">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+            </filter>
+
+            <!-- Máscara para desvanecer la línea roja en un lado -->
+            <mask id="red-fade-mask">
+                <linearGradient id="mask-gradient" x1="50%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="white" />
+                    <stop offset="100%" stop-color="black" />
+                </linearGradient>
+                <rect x="-300" y="-300" width="600" height="600" fill="url(#mask-gradient)" />
+            </mask>
+
+            <!-- ClipPath para el efecto de volumen -->
+            <clipPath id="volume-clip">
+                <rect id="volume-rect" x="-220" y="-220" width="0" height="220" />
+            </clipPath>
         </defs>
 
         <!-- El efecto de resplandor ahora se aplica a los elementos individuales para usar su color -->
@@ -142,18 +187,34 @@
             <!-- Núcleo Estático -->
             <g id="core">
                 <circle id="core-ring" class="ring" r="120" />
-                <text id="core-text" y="5">J.A.R.V.I.S</text>
+                
             </g>
 
             <!-- Anillo 1: VU Meter -->
-            <circle id="vu-meter-ring" class="ring" r="140">
-                <animate attributeName="stroke-dashoffset" from="0" to="15" dur="0.5s" repeatCount="indefinite" />
+            <circle id="vu-meter-ring" class="ring" r="100">
+                <animate attributeName="stroke-dashoffset" from="629" to="0" dur="2s" repeatCount="indefinite" />
             </circle>
 
             <!-- Anillo 2: Arco de 180 grados -->
             <path id="dashed-arc" class="ring" d="M -160 0 A 160 160 0 0 1 160 0">
                 <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="30s" repeatCount="indefinite" />
             </path>
+
+            <!-- Nuevo Arco de Cuadritos (Volumen) -->
+            <path id="volume-arc" class="ring" d="M -150 0 A 150 150 0 0 1 150 0" clip-path="url(#volume-clip)" />
+
+            <!-- Nuevo Arco Cerca del Volumen -->
+            <path id="new-arc" class="ring" d="M -140 0 A 140 140 0 0 1 140 0" />
+
+            <!-- Líneas tipo regla para el nuevo arco -->
+            <g id="ruler-lines">
+                <line x1="-140.00" y1="0.00" x2="-150.00" y2="0.00" stroke="var(--color-level-12)" stroke-width="1" />
+                <line x1="0.00" y1="-140.00" x2="0.00" y2="-150.00" stroke="var(--color-level-12)" stroke-width="1" />
+                <line x1="140.00" y1="0.00" x2="150.00" y2="0.00" stroke="var(--color-level-12)" stroke-width="1" />
+            </g>
+
+            <!-- Animación para el rectángulo del clipPath -->
+            <animate attributeName="width" values="0; 400; 0" keyTimes="0; 0.5; 1" dur="4s" repeatCount="indefinite" href="#volume-rect" />
 
             <!-- Grupo de Arcos Sincronizados -->
             <g id="synchronized-arcs-group">
@@ -186,7 +247,7 @@
             <!-- Anillo de Texto (Ceros) -->
             <g id="text-arc-group">
                 <text>
-                    <textPath href="#text-path-track">00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</textPath>
+                    <textPath href="#text-path-track">0100000101110101011101000110111101101101011000010100100101000001</textPath>
                 </text>
                 <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="60s" repeatCount="indefinite" />
             </g>
@@ -222,6 +283,17 @@
                     repeatCount="indefinite" />
             </g>
 
+            <!-- Anillo 9: Arco Grueso con Blur -->
+            <path id="thick-blurred-arc" class="ring" d="M -33.86 192.0 A 195 195 0 0 1 0 -195">
+                <animateTransform 
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 0 0"
+                    to="-360 0 0"
+                    dur="20s"
+                    repeatCount="indefinite" />
+            </path>
+
             <!-- Anillo 8: Guiones Medianos -->
             <circle id="medium-dashed-ring" class="ring" r="260">
                 <animateTransform 
@@ -232,6 +304,8 @@
                     dur="90s"
                     repeatCount="indefinite" />
             </circle>
+
+            
 
         </g>
     </svg>
