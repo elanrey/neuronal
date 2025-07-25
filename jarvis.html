@@ -9,19 +9,19 @@
 
         :root {
             --base-color: #00d9ff; /* Cian original */
-            --background-color: #00050a;
+            --background-color: #000000;
 
-            --color-level-1: #00d9ff; /* Cian para el núcleo */
-            --color-level-2: #FF0000; /* Rojo para VU Meter */
-            --color-level-3: #00FF00; /* Verde para el arco de 180 */
-            --color-level-4: #8A2BE2; /* Púrpura para el grupo sincronizado */
-            --color-level-5: #FFFF00; /* Amarillo para el anillo de texto */
-            --color-level-6: #FFA500; /* Naranja para el anillo de puntos */
-            --color-level-7: #00FFFF; /* Aqua para el anillo exterior complejo */
-            --color-level-8: #FF00FF; /* Magenta para el anillo de guiones medianos */
-            --color-level-9: #00FF7F; /* Verde primavera para el arco grueso con blur */
-            --color-level-11: #FF8C00; /* Naranja oscuro para el arco de volumen */
-            --color-level-12: #00BFFF; /* Azul cielo para el nuevo arco */
+            --color-level-1: #1cd3da; /* Cian para el núcleo */
+            --color-level-2: #57c6f1; /* Azul brillante para VU Meter */
+            --color-level-3: #0000FF; /* Azul eléctrico para el arco de 180 */
+            --color-level-4: #00E0E0; /* Cian para el grupo sincronizado */
+            --color-level-5: #2020FF; /* Azul eléctrico para el anillo de texto */
+            --color-level-6: #670ba5; /* Azul para el anillo de puntos */
+            --color-level-7: #4040FF; /* Azul eléctrico para el anillo exterior complejo */
+            --color-level-8: #00FFFF; /* Cian para el anillo de guiones medianos */
+            --color-level-9: #6442c2; /* Azul eléctrico para el arco grueso con blur */
+            --color-level-11: #00E0E0; /* Cian para el arco de volumen */
+            --color-level-12: #2020FF; /* Azul eléctrico para el nuevo arco */
             --hal-glow-color: #FF0000; /* Rojo para el ojo de HAL 9000 */
             --hal-yellow-dot-color: #FFFF00; /* Amarillo para el punto central de HAL 9000 */
         }
@@ -85,10 +85,10 @@
         }
 
         /* 11. Nuevo Arco de Cuadritos (Volumen) */
-        #volume-arc {
+        #volume-arc, #volume-arc-down {
             stroke: var(--color-level-11);
-            stroke-width: 5;
-            stroke-dasharray: 10 10; /* Cuadritos de 10px, espacio de 10px */
+            stroke-width: 10;
+            stroke-dasharray: 35 2; /* Cuadritos de 10px, espacio de 10px */
         }
 
         /* 12. Nuevo Arco Cerca del Volumen */
@@ -106,7 +106,7 @@
 
         /* 5. Anillo de Texto (Ceros) */
         #text-arc-group text {
-            fill: var(--color-level-5);
+            fill: var(--color-level-1); /* Cian brillante para el texto */
             font-size: 10px;
             letter-spacing: 2px;
         }
@@ -131,15 +131,17 @@
 
         /* 7. Anillo Exterior Complejo */
         #outer-complex-ring-group path {
-            stroke: var(--color-level-7);
+            stroke: var(--color-level-5);
             stroke-width: 5;
         }
 
         #outer-complex-ring-group .dashed-segment {
+            stroke: var(--color-level-3);
             stroke-dasharray: 5 10;
         }
 
         #outer-complex-ring-group .sawtooth-segment {
+            stroke: var(--color-level-4);
             stroke-dasharray: 1 5;
         }
 
@@ -256,6 +258,9 @@
             <clipPath id="volume-clip">
                 <rect id="volume-rect" x="-220" y="-220" width="0" height="220" />
             </clipPath>
+            <clipPath id="volume-clip-down">
+                <rect id="volume-rect-down" x="-220" y="0" width="0" height="220" />
+            </clipPath>
         </defs>
 
         <!-- El efecto de resplandor ahora se aplica a los elementos individuales para usar su color -->
@@ -292,8 +297,8 @@
             </path>
 
             <!-- Nuevo Arco de Cuadritos (Volumen) -->
-            <path id="volume-arc" class="ring" d="M -150 0 A 150 150 0 0 1 150 0" clip-path="url(#volume-clip)" />
-            <path id="volume-arc" class="ring" d="M 150 0 A -150 -150 0 0 1 -150 0" clip-path="url(#volume-clip)" />
+            <path id="volume-arc" class="ring" d="M -144 0 A 144 144 0 0 1 144 0" clip-path="url(#volume-clip)" />
+            <path id="volume-arc-down" class="ring" d="M -144 0 A 144 144 0 0 0 144 0" clip-path="url(#volume-clip-down)" />
 
             <!-- Nuevo Arco Cerca del Volumen -->
             <path id="new-arc" class="ring" d="M -140 0 A 140 140 0 0 1 140 0" />
@@ -301,26 +306,40 @@
 
             <!-- Líneas tipo regla para el nuevo arco -->
             <g id="ruler-lines">
-                <line x1="0.00" y1="-140.00" x2="0.00" y2="-150.00" stroke="var(--color-level-12)" stroke-width="1" />                
-                <line x1="-140.00" y1="0.00" x2="-150.00" y2="0.00" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="140.00" y1="0.00" x2="150.00" y2="0.00" stroke="var(--color-level-12)" stroke-width="1" />
+                <line x1="0.00" y1="-140.00" x2="0.00" y2="-150.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="0.00" y1="140.00" x2="0.00" y2="150.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-140.00" y1="0.00" x2="-150.00" y2="0.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="140.00" y1="0.00" x2="150.00" y2="0.00" stroke="var(--color-level-2)" stroke-width="1" />
 
-                <line x1="98.99" y1="-98.99" x2="106.07" y2="-106.07" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="-106.07" y1="-106.07" x2="-98.99" y2="-98.99" stroke="var(--color-level-12)" stroke-width="1" />
+                <line x1="98.99" y1="-98.99" x2="106.07" y2="-106.07" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-106.07" y1="-106.07" x2="-98.99" y2="-98.99" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-98.99" y1="98.99" x2="-106.07" y2="106.07" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="106.07" y1="106.07" x2="98.99" y2="98.99" stroke="var(--color-level-2)" stroke-width="1" />
 
-                <line x1="121.24" y1="-70.00" x2="129.90" y2="-75.00" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="-121.24" y1="-70.00" x2="-129.90" y2="-75.00" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="70.00" y1="-121.24" x2="75.00" y2="-129.90" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="-70.00" y1="-121.24" x2="-75.00" y2="-129.90" stroke="var(--color-level-12)" stroke-width="1" />
+                <line x1="121.24" y1="-70.00" x2="129.90" y2="-75.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-121.24" y1="-70.00" x2="-129.90" y2="-75.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="70.00" y1="-121.24" x2="75.00" y2="-129.90" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-70.00" y1="-121.24" x2="-75.00" y2="-129.90" stroke="var(--color-level-2)" stroke-width="1" />
 
-                <line x1="135.23" y1="-36.23" x2="144.89" y2="-38.82" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="-135.23" y1="-36.23" x2="-144.89" y2="-38.82" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="36.23" y1="-135.23" x2="38.82" y2="-144.89" stroke="var(--color-level-12)" stroke-width="1" />
-                <line x1="-36.23" y1="-135.23" x2="-38.82" y2="-144.89" stroke="var(--color-level-12)" stroke-width="1" />
+                <line x1="-121.24" y1="70.00" x2="-129.90" y2="75.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="121.24" y1="70.00" x2="129.90" y2="75.00" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-70.00" y1="121.24" x2="-75.00" y2="129.90" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="70.00" y1="121.24" x2="75.00" y2="129.90" stroke="var(--color-level-2)" stroke-width="1" />
+
+                <line x1="135.23" y1="-36.23" x2="144.89" y2="-38.82" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-135.23" y1="-36.23" x2="-144.89" y2="-38.82" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="36.23" y1="-135.23" x2="38.82" y2="-144.89" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-36.23" y1="-135.23" x2="-38.82" y2="-144.89" stroke="var(--color-level-2)" stroke-width="1" />
+
+                <line x1="-135.23" y1="36.23" x2="-144.89" y2="38.82" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="135.23" y1="36.23" x2="144.89" y2="38.82" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="-36.23" y1="135.23" x2="-38.82" y2="144.89" stroke="var(--color-level-2)" stroke-width="1" />
+                <line x1="36.23" y1="135.23" x2="38.82" y2="144.89" stroke="var(--color-level-2)" stroke-width="1" />
             </g>
 
             <!-- Animación para el rectángulo del clipPath -->
             <animate attributeName="width" values="0; 400; 0" keyTimes="0; 0.5; 1" dur="4s" repeatCount="indefinite" href="#volume-rect" />
+            <animate attributeName="width" values="0; 400; 0" keyTimes="0; 0.5; 1" dur="4s" repeatCount="indefinite" href="#volume-rect-down" />
 
             <!-- Grupo de Arcos Sincronizados -->
             <g id="synchronized-arcs-group">
@@ -360,42 +379,42 @@
 
             <!-- Grupo de Puntos Animados -->
             <g id="animated-dots-group">
-                <circle cx="-240.00" cy="0.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0s" repeatCount="indefinite" /></circle>
-                <circle cx="-236.40" cy="-41.68" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.105s" repeatCount="indefinite" /></circle>
-                <circle cx="-225.53" cy="-82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.210s" repeatCount="indefinite" /></circle>
-                <circle cx="-207.85" cy="-120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.316s" repeatCount="indefinite" /></circle>
-                <circle cx="-183.85" cy="-154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.421s" repeatCount="indefinite" /></circle>
-                <circle cx="-154.27" cy="-183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.526s" repeatCount="indefinite" /></circle>
-                <circle cx="-120.00" cy="-207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.631s" repeatCount="indefinite" /></circle>
-                <circle cx="-82.08" cy="-225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.737s" repeatCount="indefinite" /></circle>
-                <circle cx="-41.68" cy="-236.40" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.842s" repeatCount="indefinite" /></circle>
-                <circle cx="0.00" cy="-240.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.947s" repeatCount="indefinite" /></circle>
-                <circle cx="41.68" cy="-236.40" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.053s" repeatCount="indefinite" /></circle>
-                <circle cx="82.08" cy="-225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.158s" repeatCount="indefinite" /></circle>
-                <circle cx="120.00" cy="-207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.263s" repeatCount="indefinite" /></circle>
-                <circle cx="154.27" cy="-183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.368s" repeatCount="indefinite" /></circle>
-                <circle cx="183.85" cy="-154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.474s" repeatCount="indefinite" /></circle>
-                <circle cx="207.85" cy="-120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.579s" repeatCount="indefinite" /></circle>
-                <circle cx="225.53" cy="-82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.684s" repeatCount="indefinite" /></circle>
-                <circle cx="236.40" cy="-41.68" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.789s" repeatCount="indefinite" /></circle>
-                <circle cx="240.00" cy="0.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.895s" repeatCount="indefinite" /></circle>
-                <circle cx="236.35" cy="41.66" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.000s" repeatCount="indefinite" /></circle>
-                <circle cx="225.53" cy="82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.105s" repeatCount="indefinite" /></circle>
-                <circle cx="207.85" cy="120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.210s" repeatCount="indefinite" /></circle>
-                <circle cx="183.85" cy="154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.316s" repeatCount="indefinite" /></circle>
-                <circle cx="154.27" cy="183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.421s" repeatCount="indefinite" /></circle>
-                <circle cx="120.00" cy="207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.526s" repeatCount="indefinite" /></circle>
-                <circle cx="82.08" cy="225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.631s" repeatCount="indefinite" /></circle>
-                <circle cx="41.66" cy="236.35" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.737s" repeatCount="indefinite" /></circle>
-                <circle cx="0.00" cy="240.00" r="6" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.842s" repeatCount="indefinite" /></circle>
-                <circle cx="-41.66" cy="236.35" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.947s" repeatCount="indefinite" /></circle>
-                <circle cx="-82.08" cy="225.53" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.053s" repeatCount="indefinite" /></circle>
-                <circle cx="-120.00" cy="207.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.158s" repeatCount="indefinite" /></circle>
-                <circle cx="-154.27" cy="183.85" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.263s" repeatCount="indefinite" /></circle>
-                <circle cx="-183.85" cy="154.27" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.368s" repeatCount="indefinite" /></circle>
-                <circle cx="-207.85" cy="120.00" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.474s" repeatCount="indefinite" /></circle>
-                <circle cx="-225.53" cy="82.08" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.579s" repeatCount="indefinite" /></circle>
-                <circle cx="-236.35" cy="41.66" r="3" fill="var(--color-level-1)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.684s" repeatCount="indefinite" /></circle>
+                <circle cx="-240.00" cy="0.00" r="6" fill="var(--color-level-2)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0s" repeatCount="indefinite" /></circle>
+                <circle cx="-236.40" cy="-41.68" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.105s" repeatCount="indefinite" /></circle>
+                <circle cx="-225.53" cy="-82.08" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.210s" repeatCount="indefinite" /></circle>
+                <circle cx="-207.85" cy="-120.00" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.316s" repeatCount="indefinite" /></circle>
+                <circle cx="-183.85" cy="-154.27" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.421s" repeatCount="indefinite" /></circle>
+                <circle cx="-154.27" cy="-183.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.526s" repeatCount="indefinite" /></circle>
+                <circle cx="-120.00" cy="-207.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.631s" repeatCount="indefinite" /></circle>
+                <circle cx="-82.08" cy="-225.53" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.737s" repeatCount="indefinite" /></circle>
+                <circle cx="-41.68" cy="-236.40" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.842s" repeatCount="indefinite" /></circle>
+                <circle cx="0.00" cy="-240.00" r="6" fill="var(--color-level-2)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="0.947s" repeatCount="indefinite" /></circle>
+                <circle cx="41.68" cy="-236.40" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.053s" repeatCount="indefinite" /></circle>
+                <circle cx="82.08" cy="-225.53" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.158s" repeatCount="indefinite" /></circle>
+                <circle cx="120.00" cy="-207.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.263s" repeatCount="indefinite" /></circle>
+                <circle cx="154.27" cy="-183.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.368s" repeatCount="indefinite" /></circle>
+                <circle cx="183.85" cy="-154.27" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.474s" repeatCount="indefinite" /></circle>
+                <circle cx="207.85" cy="-120.00" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.579s" repeatCount="indefinite" /></circle>
+                <circle cx="225.53" cy="-82.08" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.684s" repeatCount="indefinite" /></circle>
+                <circle cx="236.40" cy="-41.68" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.789s" repeatCount="indefinite" /></circle>
+                <circle cx="240.00" cy="0.00" r="6" fill="var(--color-level-2)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="1.895s" repeatCount="indefinite" /></circle>
+                <circle cx="236.35" cy="41.66" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.000s" repeatCount="indefinite" /></circle>
+                <circle cx="225.53" cy="82.08" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.105s" repeatCount="indefinite" /></circle>
+                <circle cx="207.85" cy="120.00" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.210s" repeatCount="indefinite" /></circle>
+                <circle cx="183.85" cy="154.27" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.316s" repeatCount="indefinite" /></circle>
+                <circle cx="154.27" cy="183.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.421s" repeatCount="indefinite" /></circle>
+                <circle cx="120.00" cy="207.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.526s" repeatCount="indefinite" /></circle>
+                <circle cx="82.08" cy="225.53" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.631s" repeatCount="indefinite" /></circle>
+                <circle cx="41.66" cy="236.35" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.737s" repeatCount="indefinite" /></circle>
+                <circle cx="0.00" cy="240.00" r="6" fill="var(--color-level-2)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.842s" repeatCount="indefinite" /></circle>
+                <circle cx="-41.66" cy="236.35" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="2.947s" repeatCount="indefinite" /></circle>
+                <circle cx="-82.08" cy="225.53" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.053s" repeatCount="indefinite" /></circle>
+                <circle cx="-120.00" cy="207.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.158s" repeatCount="indefinite" /></circle>
+                <circle cx="-154.27" cy="183.85" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.263s" repeatCount="indefinite" /></circle>
+                <circle cx="-183.85" cy="154.27" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.368s" repeatCount="indefinite" /></circle>
+                <circle cx="-207.85" cy="120.00" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.474s" repeatCount="indefinite" /></circle>
+                <circle cx="-225.53" cy="82.08" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.579s" repeatCount="indefinite" /></circle>
+                <circle cx="-236.35" cy="41.66" r="3" fill="var(--color-level-3)" opacity="0"><animate attributeName="opacity" values="0;1;0" keyTimes="0;0.1;1" dur="2s" begin="3.684s" repeatCount="indefinite" /></circle>
             </g>
 
             <!-- Anillo 6: Puntos Finos -->
