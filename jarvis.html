@@ -107,8 +107,8 @@
         /* 5. Anillo de Texto (Ceros) */
         #text-arc-group text {
             fill: var(--color-level-5);
-            font-size: 9px;
-            letter-spacing: 4px;
+            font-size: 10px;
+            letter-spacing: 2px;
         }
 
         /* El trazado invisible no necesita color de stroke */
@@ -167,7 +167,7 @@
         <!-- Definiciones para elementos reutilizables -->
         <defs>
             <!-- Trazado invisible para el texto en arco -->
-            <path id="text-path-track" d="M -220 0 A 220 220 0 0 1 220 0" />
+            <path id="text-path-track" d="M 220,0 A 220,220 0 1,0 -220,0 A 220,220 0 1,0 220,0 Z" />
 
             <!-- Filtro de Desenfoque (Blur) -->
             <filter id="blur-filter">
@@ -216,6 +216,8 @@
                 <feMerge>
                     <feMergeNode in="SourceGraphic"/>
                     <feMergeNode in="blur-hal"/>
+                    <feMergeNode in="blur-hal"/>
+                    <feMergeNode in="blur-hal"/>
                 </feMerge>
             </filter>
 
@@ -224,6 +226,9 @@
                 <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur-yellow" />
                 <feMerge>
                     <feMergeNode in="SourceGraphic"/>
+                    <feMergeNode in="blur-yellow"/>
+                    <feMergeNode in="blur-yellow"/>
+                    <feMergeNode in="blur-yellow"/>
                     <feMergeNode in="blur-yellow"/>
                 </feMerge>
             </filter>
@@ -273,8 +278,7 @@
 
             <!-- Núcleo Estático -->
             <g id="core">
-                <circle id="core-ring" class="ring" r="160" />
-                <text id="core-text" x="0" y="0">AutomatIA</text>
+                <circle id="core-ring" class="ring" r="120" />
             </g>
 
             <!-- Anillo 1: VU Meter -->
@@ -283,15 +287,17 @@
             </circle>
 
             <!-- Anillo 2: Arco de 180 grados -->
-            <path id="dashed-arc" class="ring" d="M -160 0 A 160 160 0 0 1 160 0">
+            <path id="dashed-arc" class="ring" d="M -160 0 A 160 160 0 0 1 0 160">
                 <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="30s" repeatCount="indefinite" />
             </path>
 
             <!-- Nuevo Arco de Cuadritos (Volumen) -->
             <path id="volume-arc" class="ring" d="M -150 0 A 150 150 0 0 1 150 0" clip-path="url(#volume-clip)" />
+            <path id="volume-arc" class="ring" d="M 150 0 A -150 -150 0 0 1 -150 0" clip-path="url(#volume-clip)" />
 
             <!-- Nuevo Arco Cerca del Volumen -->
             <path id="new-arc" class="ring" d="M -140 0 A 140 140 0 0 1 140 0" />
+            <path id="new-arc" class="ring" d="M 140 0 A 140 140 0 0 1 -140 0" />
 
             <!-- Líneas tipo regla para el nuevo arco -->
             <g id="ruler-lines">
@@ -347,9 +353,9 @@
             <!-- Anillo de Texto (Ceros) -->
             <g id="text-arc-group">
                 <text>
-                    <textPath href="#text-path-track">01000001 01110101 01110100 01101111 01101101 01100001 01110100 01001001 01000001</textPath>
+                    <textPath href="#text-path-track">01000001 01110101 01110100 01101111 01101101 01100001 01110100 01001001 01000001 00100000 01000001 01110101 01110100 01101111 01101101 01100001 01110100 01001001 01000001 00100000</textPath>
                 </text>
-                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="60s" repeatCount="indefinite" />
+                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="60s" repeatCount="indefinite" />
             </g>
 
             <!-- Grupo de Puntos Animados -->
@@ -454,12 +460,6 @@
                     dur="90s"
                     repeatCount="indefinite" />
             </circle>
-
-            
-
-            
-
-            
 
         </g>
     </svg>
