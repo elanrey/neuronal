@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+:root {
+    --base-color: #00d9ff; /* Cian original */
+    --background-color: #000000;
+
+    --color-level-1: #1cd3da; /* Cian para el núcleo */
+    --color-level-2: #57c6f1; /* Azul brillante para VU Meter */
+    --color-level-3: #0000FF; /* Azul eléctrico para el arco de 180 */
+    --color-level-4: #00E0E0; /* Cian para el grupo sincronizado */
+    --color-level-5: #2020FF; /* Azul eléctrico para el anillo de texto */
+    --color-level-6: #670ba5; /* Azul para el anillo de puntos */
+    --color-level-7: #4040FF; /* Azul eléctrico para el anillo exterior complejo */
+    --color-level-8: #00FFFF; /* Cian para el anillo de guiones medianos */
+    --color-level-9: #6442c2; /* Azul eléctrico para el arco grueso con blur */
+    --color-level-11: #00E0E0; /* Cian para el arco de volumen */
+    --color-level-12: #2020FF; /* Azul eléctrico para el nuevo arco */
+    --hal-glow-color: #FF0000; /* Rojo para el ojo de HAL 9000 */
+    --hal-yellow-dot-color: #FFFF00; /* Amarillo para el punto central de HAL 9000 */
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Orbitron', sans-serif;
+}
+
+#jarvis-interface {
+    width: 800px;
+    height: 800px;
+}
+
+/* El efecto de resplandor ahora usará el color del elemento */
+.glow-effect g, .glow-effect circle, .glow-effect path, .glow-effect text {
+    filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 12px currentColor);
+}
+
+.ring {
+    fill: none;
+}
+
+/* --- Componentes Específicos con Colores --- */
+
+/* 1. El Núcleo */
+#core-text {
+    fill: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 8px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    stroke: var(--color-level-1); /* El texto también tendrá un resplandor de su color */
+    stroke-width: 0.5;
+}
+
+#core-ring {
+    stroke: var(--color-level-1);
+    stroke-width: 3;
+}
+
+/* 2. Anillo VU Meter */
+#vu-meter-ring {
+    stroke: var(--color-level-2);
+    stroke-width: 20;
+    stroke-dasharray: 20 5;
+}
+
+/* 3. Arco de 180 grados */
+#dashed-arc {
+    stroke: var(--color-level-3);
+    stroke-width: 2;
+    stroke-dasharray: 2 10;
+}
+
+/* 11. Nuevo Arco de Cuadritos (Volumen) */
+#volume-arc, #volume-arc-down {
+    stroke: var(--color-level-11);
+    stroke-width: 10;
+    stroke-dasharray: 35 2; /* Cuadritos de 10px, espacio de 10px */
+}
+
+/* 12. Nuevo Arco Cerca del Volumen */
+#new-arc {
+    stroke: var(--color-level-12);
+    stroke-width: 1.5;
+    stroke-dasharray: none;
+}
+
+/* 4. Grupo de Arcos Sincronizados */
+#synchronized-arcs-group path, #synchronized-arcs-group line {
+    stroke: var(--color-level-4);
+    stroke-width: 1.5;
+}
+
+/* 5. Anillo de Texto (Ceros) */
+#text-arc-group text {
+    fill: var(--color-level-1); /* Cian brillante para el texto */
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+/* El trazado invisible no necesita color de stroke */
+#text-path-track {
+    stroke: none;
+}
+
+/* 6. Anillo de Puntos Finos */
+#dotted-ring {
+    stroke: var(--color-level-6);
+    stroke-width: 8;
+    stroke-dasharray: 1 5; /* Punto de 5px, espacio de 10px */
+}
+
+#dotted-ring-large {
+    stroke: var(--color-level-6);
+    stroke-width: 14;
+    stroke-dasharray: 3 30; /* Punto de 5px, espacio de 10px */
+}
+
+/* 7. Anillo Exterior Complejo */
+#outer-complex-ring-group path {
+    stroke: var(--color-level-5);
+    stroke-width: 5;
+}
+
+#outer-complex-ring-group .dashed-segment {
+    stroke: var(--color-level-3);
+    stroke-dasharray: 5 10;
+}
+
+#outer-complex-ring-group .sawtooth-segment {
+    stroke: var(--color-level-4);
+    stroke-dasharray: 1 5;
+}
+
+/* 8. Anillo de Guiones Medianos */
+#medium-dashed-ring {
+    stroke: var(--color-level-8);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 15; /* Guiones de 5px, espacio de 15px */
+}
+
+/* 9. Arco Grueso con Blur */
+#thick-blurred-arc {
+    stroke: var(--color-level-9);
+    stroke-width: 8;
+    filter: url(#blur-filter); /* Aplicar el filtro de desenfoque */
+}
